@@ -6,7 +6,6 @@
         <title>Flashcards - Joshuari</title>
         <link rel="stylesheet" href="style.css" />
         <style>
-            /* Stili specifici per le flashcards che si integrano col tuo sito */
             .flashcard-section {
                 padding: 50px 0;
                 display: flex;
@@ -14,48 +13,70 @@
                 align-items: center;
                 min-height: 70vh;
             }
+
+            /* Layout della Card */
             .card {
-                background: white;
+                background: white !important; /* Forza sfondo bianco */
                 border-radius: 15px;
                 padding: 40px;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
                 cursor: pointer;
-                width: 100%;
+                width: 90%;
                 max-width: 400px;
+                min-height: 250px;
                 text-align: center;
-                margin: 20px 0;
+                margin: 20px auto;
                 border: 1px solid #ddd;
+                display: none; /* Gestito via JS */
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
+
+            /* Testi all'interno della card */
             .hanzi {
-                font-size: 3.5rem;
-                margin-bottom: 10px;
-                color: #333;
+                font-size: 4rem;
+                margin-bottom: 15px;
+                color: #1a1a1a !important; /* Forza colore scuro */
+                display: block;
             }
+
             .pinyin {
-                font-size: 1.5rem;
-                color: #0066cc;
-                visibility: hidden;
+                font-size: 1.6rem;
+                color: #0066cc !important; /* Colore blu per il pinyin */
+                margin-bottom: 5px;
+                display: none; /* Nasconde inizialmente */
             }
+
             .translation {
-                font-size: 1.2rem;
-                margin-top: 10px;
-                visibility: hidden;
+                font-size: 1.3rem;
+                color: #444 !important; /* Grigio scuro per la traduzione */
+                display: none; /* Nasconde inizialmente */
             }
-            .show .pinyin,
-            .show .translation {
-                visibility: visible;
+
+            /* Mostra pinyin e traduzione al click */
+            .card.show .pinyin,
+            .card.show .translation {
+                display: block;
             }
 
             #file-input {
                 margin-bottom: 20px;
             }
+
             .btn-next {
                 background: #333;
                 color: white;
                 border: none;
-                padding: 10px 20px;
-                border-radius: 5px;
+                padding: 12px 25px;
+                border-radius: 8px;
+                font-size: 1rem;
                 cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .btn-next:hover {
+                background: #555;
             }
         </style>
     </head>
@@ -75,11 +96,13 @@
         <section class="flashcard-section">
             <div class="container" style="text-align: center">
                 <h2>Ripasso Cinese</h2>
-                <p>Carica il tuo mazzo JSON per iniziare.</p>
+                <p id="instruction-text">
+                    Carica il tuo mazzo JSON per iniziare.
+                </p>
 
                 <input type="file" id="file-input" accept=".json" />
 
-                <div id="card-display" class="card" style="display: none">
+                <div id="card-display" class="card">
                     <div class="hanzi" id="hanzi"></div>
                     <div class="pinyin" id="pinyin"></div>
                     <div class="translation" id="translation"></div>
@@ -104,17 +127,30 @@
             const fileInput = document.getElementById("file-input");
             const cardDisplay = document.getElementById("card-display");
             const nextBtn = document.getElementById("next-btn");
+            const instructionText = document.getElementById("instruction-text");
 
             fileInput.addEventListener("change", function (e) {
                 const file = e.target.files[0];
+                if (!file) return;
+
                 const reader = new FileReader();
                 reader.onload = function (event) {
-                    deck = JSON.parse(event.target.result);
-                    deck.sort(() => Math.random() - 0.5);
-                    showCard();
-                    fileInput.style.display = "none";
-                    cardDisplay.style.display = "block";
-                    nextBtn.style.display = "inline-block";
+                    try {
+                        deck = JSON.parse(event.target.result);
+                        if (deck.length > 0) {
+                            deck.sort(() => Math.random() - 0.5);
+                            currentIndex = 0;
+                            showCard();
+
+                            // Aggiorna interfaccia
+                            fileInput.style.display = "none";
+                            instructionText.style.display = "none";
+                            cardDisplay.style.display = "flex";
+                            nextBtn.style.display = "inline-block";
+                        }
+                    } catch (err) {
+                        alert("Errore nel file JSON. Controlla il formato.");
+                    }
                 };
                 reader.readAsText(file);
             });
@@ -125,15 +161,20 @@
                 document.getElementById("pinyin").textContent = card.pinyin;
                 document.getElementById("translation").textContent =
                     card.traduzione;
+
+                // Resetta la card allo stato coperto
                 cardDisplay.classList.remove("show");
             }
 
-            cardDisplay.addEventListener("click", () =>
-                cardDisplay.classList.toggle("show"),
-            );
+            // Rivela al click
+            cardDisplay.addEventListener("click", () => {
+                cardDisplay.classList.toggle("show");
+            });
 
+            // Vai alla prossima
             nextBtn.addEventListener("click", () => {
                 currentIndex = (currentIndex + 1) % deck.length;
+                // Se abbiamo finito il giro, mescola di nuovo
                 if (currentIndex === 0) deck.sort(() => Math.random() - 0.5);
                 showCard();
             });
