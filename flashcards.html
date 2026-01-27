@@ -6,77 +6,133 @@
         <title>Flashcards - Joshuari</title>
         <link rel="stylesheet" href="style.css" />
         <style>
+            /* --- LAYOUT GENERALE --- */
             .flashcard-section {
-                padding: 50px 0;
+                padding: 40px 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                min-height: 70vh;
+                min-height: 80vh; /* Occupa buona parte dello schermo */
+                font-family: sans-serif;
             }
 
-            /* Layout della Card */
-            .card {
-                background: white !important; /* Forza sfondo bianco */
-                border-radius: 15px;
-                padding: 40px;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                cursor: pointer;
+            /* --- CONTENITORE PROSPETTIVA (SCENA) --- */
+            .scene {
                 width: 90%;
                 max-width: 400px;
-                min-height: 250px;
-                text-align: center;
+                height: 300px;
                 margin: 20px auto;
-                border: 1px solid #ddd;
-                display: none; /* Gestito via JS */
+                perspective: 1000px; /* Dà profondità al 3D */
+                display: none; /* Nascosto finché non carichi il file */
+            }
+
+            /* --- LA CARD STESSA --- */
+            .card {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
+                cursor: pointer;
+            }
+
+            /* Classe aggiunta via JS per girare la card */
+            .card.is-flipped {
+                transform: rotateY(180deg);
+            }
+
+            /* --- FACCE DELLA CARD (FRONTE E RETRO) --- */
+            .card-face {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                -webkit-backface-visibility: hidden; /* Nasconde il retro quando non girata */
+                backface-visibility: hidden;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border: 2px solid #eee;
+                background-color: white !important; /* Forza sfondo bianco */
+
+                /* Centratura del testo */
+                display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                text-align: center;
+                padding: 20px;
+                box-sizing: border-box;
             }
 
-            /* Testi all'interno della card */
+            /* Faccia Anteriore (Cinese + Pinyin) */
+            .card-front {
+                background-color: white;
+            }
+
+            /* Faccia Posteriore (Traduzione) */
+            .card-back {
+                background-color: white;
+                transform: rotateY(180deg); /* È già girata all'inizio */
+            }
+
+            /* --- STILI TESTO (Forzati neri/visibili) --- */
             .hanzi {
-                font-size: 4rem;
+                font-size: 4.5rem;
+                color: black !important; /* Nero assoluto */
+                font-weight: bold;
                 margin-bottom: 15px;
-                color: #1a1a1a !important; /* Forza colore scuro */
-                display: block;
             }
 
             .pinyin {
-                font-size: 1.6rem;
-                color: #0066cc !important; /* Colore blu per il pinyin */
-                margin-bottom: 5px;
-                display: none; /* Nasconde inizialmente */
+                font-size: 1.8rem;
+                color: #0066cc !important; /* Blu per distinzione, ma ben visibile */
+                visibility: hidden; /* Nascosto all'inizio */
+                font-weight: 500;
             }
 
             .translation {
-                font-size: 1.3rem;
-                color: #444 !important; /* Grigio scuro per la traduzione */
-                display: none; /* Nasconde inizialmente */
+                font-size: 2rem;
+                color: black !important; /* Nero assoluto */
+                font-weight: bold;
             }
 
-            /* Mostra pinyin e traduzione al click */
-            .card.show .pinyin,
-            .card.show .translation {
-                display: block;
+            /* --- CONTROLLI --- */
+            .controls-area {
+                display: none; /* Nascosta all'inizio */
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+                align-items: center;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 8px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.2s;
+                width: 200px;
+            }
+
+            .btn-pinyin {
+                background-color: #e0e0e0;
+                color: #333;
+                border: 1px solid #ccc;
+            }
+            .btn-pinyin:hover {
+                background-color: #d0d0d0;
+            }
+
+            .btn-next {
+                background-color: #333;
+                color: white;
+            }
+            .btn-next:hover {
+                background-color: #555;
             }
 
             #file-input {
                 margin-bottom: 20px;
-            }
-
-            .btn-next {
-                background: #333;
-                color: white;
-                border: none;
-                padding: 12px 25px;
-                border-radius: 8px;
-                font-size: 1rem;
-                cursor: pointer;
-                margin-top: 10px;
-            }
-
-            .btn-next:hover {
-                background: #555;
             }
         </style>
     </head>
@@ -102,15 +158,27 @@
 
                 <input type="file" id="file-input" accept=".json" />
 
-                <div id="card-display" class="card">
-                    <div class="hanzi" id="hanzi"></div>
-                    <div class="pinyin" id="pinyin"></div>
-                    <div class="translation" id="translation"></div>
+                <div class="scene" id="scene">
+                    <div class="card" id="card">
+                        <div class="card-face card-front">
+                            <div class="hanzi" id="hanzi"></div>
+                            <div class="pinyin" id="pinyin"></div>
+                        </div>
+
+                        <div class="card-face card-back">
+                            <div class="translation" id="translation"></div>
+                        </div>
+                    </div>
                 </div>
 
-                <button id="next-btn" class="btn-next" style="display: none">
-                    Prossima Parola
-                </button>
+                <div class="controls-area" id="controls">
+                    <button class="btn btn-pinyin" id="show-pinyin-btn">
+                        Mostra Pinyin
+                    </button>
+                    <button class="btn btn-next" id="next-btn">
+                        Prossima Parola
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -124,11 +192,23 @@
             let deck = [];
             let currentIndex = 0;
 
+            // Elementi DOM
             const fileInput = document.getElementById("file-input");
-            const cardDisplay = document.getElementById("card-display");
-            const nextBtn = document.getElementById("next-btn");
+            const scene = document.getElementById("scene");
+            const card = document.getElementById("card");
+            const controls = document.getElementById("controls");
             const instructionText = document.getElementById("instruction-text");
 
+            // Elementi Testo
+            const hanziEl = document.getElementById("hanzi");
+            const pinyinEl = document.getElementById("pinyin");
+            const translationEl = document.getElementById("translation");
+
+            // Pulsanti
+            const pinyinBtn = document.getElementById("show-pinyin-btn");
+            const nextBtn = document.getElementById("next-btn");
+
+            // 1. CARICAMENTO FILE
             fileInput.addEventListener("change", function (e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -138,45 +218,56 @@
                     try {
                         deck = JSON.parse(event.target.result);
                         if (deck.length > 0) {
-                            deck.sort(() => Math.random() - 0.5);
+                            deck.sort(() => Math.random() - 0.5); // Mischia
                             currentIndex = 0;
-                            showCard();
+                            loadCardData();
 
-                            // Aggiorna interfaccia
+                            // Mostra interfaccia
                             fileInput.style.display = "none";
                             instructionText.style.display = "none";
-                            cardDisplay.style.display = "flex";
-                            nextBtn.style.display = "inline-block";
+                            scene.style.display = "block";
+                            controls.style.display = "flex";
                         }
                     } catch (err) {
-                        alert("Errore nel file JSON. Controlla il formato.");
+                        alert("Errore nel file JSON.");
                     }
                 };
                 reader.readAsText(file);
             });
 
-            function showCard() {
-                const card = deck[currentIndex];
-                document.getElementById("hanzi").textContent = card.carattere;
-                document.getElementById("pinyin").textContent = card.pinyin;
-                document.getElementById("translation").textContent =
-                    card.traduzione;
+            // 2. FUNZIONE PER CARICARE I DATI
+            function loadCardData() {
+                const data = deck[currentIndex];
 
-                // Resetta la card allo stato coperto
-                cardDisplay.classList.remove("show");
+                // Resetta lo stato visivo
+                card.classList.remove("is-flipped"); // Torna sul fronte
+                pinyinEl.style.visibility = "hidden"; // Nascondi pinyin
+
+                // Imposta i testi con un piccolo ritardo per evitare spoiler mentre gira
+                setTimeout(() => {
+                    hanziEl.textContent = data.carattere;
+                    pinyinEl.textContent = data.pinyin;
+                    translationEl.textContent = data.traduzione;
+                }, 200);
             }
 
-            // Rivela al click
-            cardDisplay.addEventListener("click", () => {
-                cardDisplay.classList.toggle("show");
+            // 3. EVENTO: MOSTRA PINYIN (Bottone Grigio)
+            pinyinBtn.addEventListener("click", (e) => {
+                e.stopPropagation(); // Evita che il click passi alla card
+                pinyinEl.style.visibility = "visible";
             });
 
-            // Vai alla prossima
-            nextBtn.addEventListener("click", () => {
+            // 4. EVENTO: GIRA LA CARD (Click sulla Card)
+            card.addEventListener("click", () => {
+                card.classList.toggle("is-flipped");
+            });
+
+            // 5. EVENTO: PROSSIMA PAROLA (Bottone Nero)
+            nextBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
                 currentIndex = (currentIndex + 1) % deck.length;
-                // Se abbiamo finito il giro, mescola di nuovo
-                if (currentIndex === 0) deck.sort(() => Math.random() - 0.5);
-                showCard();
+                if (currentIndex === 0) deck.sort(() => Math.random() - 0.5); // Rimischia se finito
+                loadCardData();
             });
         </script>
     </body>
