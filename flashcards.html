@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Flashcards - Joshuari</title>
+        <link rel="stylesheet" href="style.css" />
+        <style>
+            /* Stili specifici per le flashcards che si integrano col tuo sito */
+            .flashcard-section {
+                padding: 50px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 70vh;
+            }
+            .card {
+                background: white;
+                border-radius: 15px;
+                padding: 40px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                width: 100%;
+                max-width: 400px;
+                text-align: center;
+                margin: 20px 0;
+                border: 1px solid #ddd;
+            }
+            .hanzi {
+                font-size: 3.5rem;
+                margin-bottom: 10px;
+                color: #333;
+            }
+            .pinyin {
+                font-size: 1.5rem;
+                color: #0066cc;
+                visibility: hidden;
+            }
+            .translation {
+                font-size: 1.2rem;
+                margin-top: 10px;
+                visibility: hidden;
+            }
+            .show .pinyin,
+            .show .translation {
+                visibility: visible;
+            }
+
+            #file-input {
+                margin-bottom: 20px;
+            }
+            .btn-next {
+                background: #333;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <h1>Joshuari</h1>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="flashcards.html">Flashcards</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <section class="flashcard-section">
+            <div class="container" style="text-align: center">
+                <h2>Ripasso Cinese</h2>
+                <p>Carica il tuo mazzo JSON per iniziare.</p>
+
+                <input type="file" id="file-input" accept=".json" />
+
+                <div id="card-display" class="card" style="display: none">
+                    <div class="hanzi" id="hanzi"></div>
+                    <div class="pinyin" id="pinyin"></div>
+                    <div class="translation" id="translation"></div>
+                </div>
+
+                <button id="next-btn" class="btn-next" style="display: none">
+                    Prossima Parola
+                </button>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 Joshuari</p>
+            </div>
+        </footer>
+
+        <script>
+            let deck = [];
+            let currentIndex = 0;
+
+            const fileInput = document.getElementById("file-input");
+            const cardDisplay = document.getElementById("card-display");
+            const nextBtn = document.getElementById("next-btn");
+
+            fileInput.addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    deck = JSON.parse(event.target.result);
+                    deck.sort(() => Math.random() - 0.5);
+                    showCard();
+                    fileInput.style.display = "none";
+                    cardDisplay.style.display = "block";
+                    nextBtn.style.display = "inline-block";
+                };
+                reader.readAsText(file);
+            });
+
+            function showCard() {
+                const card = deck[currentIndex];
+                document.getElementById("hanzi").textContent = card.carattere;
+                document.getElementById("pinyin").textContent = card.pinyin;
+                document.getElementById("translation").textContent =
+                    card.traduzione;
+                cardDisplay.classList.remove("show");
+            }
+
+            cardDisplay.addEventListener("click", () =>
+                cardDisplay.classList.toggle("show"),
+            );
+
+            nextBtn.addEventListener("click", () => {
+                currentIndex = (currentIndex + 1) % deck.length;
+                if (currentIndex === 0) deck.sort(() => Math.random() - 0.5);
+                showCard();
+            });
+        </script>
+    </body>
+</html>
