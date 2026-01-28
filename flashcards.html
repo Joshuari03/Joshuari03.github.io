@@ -1,314 +1,273 @@
-<!-- flashcards.html -->
 <!doctype html>
-<html lang="en">
+<html lang="it">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Flashcards | Joshua Rizzello</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
+        <title>Flashcards - Joshuari</title>
+        <link rel="stylesheet" href="style.css" />
         <style>
-            /* Reuse the main styles from index.html */
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            }
-
-            :root {
-                --primary: #003049;
-                --secondary: #d62828;
-                --accent: #f77f00;
-                --light: #eae2b7;
-                --dark: #001524;
-                --gray: #6c757d;
-            }
-
-            html {
-                scroll-behavior: smooth;
-            }
-
-            body {
-                background-color: #f8f9fa;
-                color: #333;
-                line-height: 1.6;
-            }
-
-            .container {
-                width: 90%;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 15px;
-            }
-
-            /* Header & Navigation */
-            header {
-                background-color: var(--primary);
-                color: white;
-                position: fixed;
-                width: 100%;
-                top: 0;
-                z-index: 1000;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            nav {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 20px 0;
-            }
-
-            .logo {
-                font-size: 1.8rem;
-                font-weight: 700;
-                color: white;
-                text-decoration: none;
-            }
-
-            .logo span {
-                color: var(--accent);
-            }
-
-            .nav-links {
-                display: flex;
-                list-style: none;
-            }
-
-            .nav-links li {
-                margin-left: 30px;
-            }
-
-            .nav-links a {
-                color: white;
-                text-decoration: none;
-                font-weight: 500;
-                transition: color 0.3s;
-                font-size: 1.05rem;
-            }
-
-            .nav-links a:hover {
-                color: var(--accent);
-            }
-
-            .hamburger {
-                display: none;
-                cursor: pointer;
-                font-size: 1.5rem;
-            }
-
-            /* Flashcards Container */
-            .flashcards-container {
-                padding: 150px 0 100px;
-                min-height: 80vh;
+            /* --- LAYOUT GENERALE --- */
+            .flashcard-section {
+                padding: 40px 0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                min-height: 80vh; /* Occupa buona parte dello schermo */
+                font-family: sans-serif;
+            }
+
+            /* --- CONTENITORE PROSPETTIVA (SCENA) --- */
+            .scene {
+                width: 90%;
+                max-width: 400px;
+                height: 300px;
+                margin: 20px auto;
+                perspective: 1000px; /* Dà profondità al 3D */
+                display: none; /* Nascosto finché non carichi il file */
+            }
+
+            /* --- LA CARD STESSA --- */
+            .card {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
+                cursor: pointer;
+            }
+
+            /* Classe aggiunta via JS per girare la card */
+            .card.is-flipped {
+                transform: rotateY(180deg);
+            }
+
+            /* --- FACCE DELLA CARD (FRONTE E RETRO) --- */
+            .card-face {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                -webkit-backface-visibility: hidden; /* Nasconde il retro quando non girata */
+                backface-visibility: hidden;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border: 2px solid #eee;
+                background-color: white !important; /* Forza sfondo bianco */
+
+                /* Centratura del testo */
+                display: flex;
+                flex-direction: column;
                 justify-content: center;
-            }
-
-            .flashcards-placeholder {
+                align-items: center;
                 text-align: center;
-                max-width: 600px;
-                padding: 40px;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            /* Faccia Anteriore (Cinese + Pinyin) */
+            .card-front {
                 background-color: white;
-                border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             }
 
-            .flashcards-placeholder i {
-                font-size: 4rem;
-                color: var(--accent);
-                margin-bottom: 20px;
+            /* Faccia Posteriore (Traduzione) */
+            .card-back {
+                background-color: white;
+                transform: rotateY(180deg); /* È già girata all'inizio */
             }
 
-            .flashcards-placeholder h2 {
-                color: var(--primary);
+            /* --- STILI TESTO (Forzati neri/visibili) --- */
+            .hanzi {
+                font-size: 2.5rem;
+                color: #0a0a0a !important; /* Nero assoluto */
+                font-weight: 500;
                 margin-bottom: 15px;
             }
 
-            .flashcards-placeholder p {
-                color: var(--gray);
-                margin-bottom: 25px;
+            .pinyin {
+                font-size: 1.8rem;
+                color: #0066cc !important; /* Blu per distinzione, ma ben visibile */
+                visibility: hidden; /* Nascosto all'inizio */
+                font-weight: 500;
+            }
+
+            .translation {
+                font-size: 1.8rem;
+                color: #0a0a0a !important; /* Nero assoluto */
+                font-weight: 500;
+            }
+
+            /* --- CONTROLLI --- */
+            .controls-area {
+                display: none; /* Nascosta all'inizio */
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+                align-items: center;
             }
 
             .btn {
-                display: inline-block;
-                background-color: var(--accent);
-                color: white;
-                padding: 12px 30px;
-                border-radius: 5px;
-                text-decoration: none;
-                font-weight: 600;
-                transition: all 0.3s;
+                padding: 12px 24px;
                 border: none;
-                cursor: pointer;
+                border-radius: 8px;
                 font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.2s;
+                width: 200px;
             }
 
-            .btn:hover {
-                background-color: #e67200;
-                transform: translateY(-3px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            .btn-pinyin {
+                background-color: #e0e0e0;
+                color: #333;
+                border: 1px solid #ccc;
+            }
+            .btn-pinyin:hover {
+                background-color: #d0d0d0;
             }
 
-            /* Footer */
-            footer {
-                background-color: var(--dark);
+            .btn-next {
+                background-color: #333;
                 color: white;
-                padding: 60px 0 30px;
+            }
+            .btn-next:hover {
+                background-color: #555;
             }
 
-            .footer-content {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .footer-logo {
-                font-size: 1.8rem;
-                font-weight: 700;
+            #file-input {
                 margin-bottom: 20px;
-            }
-
-            .footer-links {
-                display: flex;
-                list-style: none;
-                margin-bottom: 30px;
-            }
-
-            .footer-links li {
-                margin: 0 15px;
-            }
-
-            .footer-links a {
-                color: #adb5bd;
-                text-decoration: none;
-                transition: color 0.3s;
-            }
-
-            .footer-links a:hover {
-                color: var(--accent);
-            }
-
-            .copyright {
-                color: #adb5bd;
-                font-size: 0.9rem;
-                margin-top: 30px;
-            }
-
-            @media (max-width: 768px) {
-                .nav-links {
-                    position: fixed;
-                    top: 70px;
-                    left: -100%;
-                    width: 100%;
-                    flex-direction: column;
-                    background-color: var(--primary);
-                    text-align: center;
-                    transition: left 0.3s;
-                    padding: 20px 0;
-                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-                }
-
-                .nav-links.active {
-                    left: 0;
-                }
-
-                .nav-links li {
-                    margin: 15px 0;
-                }
-
-                .hamburger {
-                    display: block;
-                }
-
-                .flashcards-container {
-                    padding: 130px 0 80px;
-                }
             }
         </style>
     </head>
     <body>
-        <!-- Header & Navigation -->
         <header>
             <div class="container">
+                <h1>Joshuari</h1>
                 <nav>
-                    <a href="index.html" class="logo">Josh<span>Rizz</span></a>
-                    <ul class="nav-links">
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#projects">Projects</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
                         <li><a href="flashcards.html">Flashcards</a></li>
                     </ul>
-                    <div class="hamburger">
-                        <i class="fas fa-bars"></i>
-                    </div>
                 </nav>
             </div>
         </header>
 
-        <!-- Flashcards Container -->
-        <section class="flashcards-container">
-            <div class="container">
-                <div class="flashcards-placeholder">
-                    <i class="fas fa-lightbulb"></i>
-                    <h2>Flashcards Application</h2>
-                    <p>
-                        This page is reserved for your flashcards application.
-                        You can replace this content with your own HTML, CSS,
-                        and JavaScript for the flashcards functionality.
-                    </p>
-                    <p>
-                        For now, this is a placeholder. You can add your
-                        flashcards app code here when it's ready.
-                    </p>
-                    <a href="index.html" class="btn">Back to Portfolio</a>
+        <section class="flashcard-section">
+            <div class="container" style="text-align: center">
+                <h2>Ripasso Cinese</h2>
+                <p id="instruction-text">
+                    Carica il tuo mazzo JSON per iniziare.
+                </p>
+
+                <input type="file" id="file-input" accept=".json" />
+
+                <div class="scene" id="scene">
+                    <div class="card" id="card">
+                        <div class="card-face card-front">
+                            <div class="hanzi" id="hanzi"></div>
+                            <div class="pinyin" id="pinyin"></div>
+                        </div>
+
+                        <div class="card-face card-back">
+                            <div class="translation" id="translation"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-area" id="controls">
+                    <button class="btn btn-pinyin" id="show-pinyin-btn">
+                        Mostra Pinyin
+                    </button>
+                    <button class="btn btn-next" id="next-btn">
+                        Prossima Parola
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
         <footer>
             <div class="container">
-                <div class="footer-content">
-                    <div class="footer-logo">
-                        Josh<span style="color: var(--accent)">Rizz</span>
-                    </div>
-                    <ul class="footer-links">
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#projects">Projects</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
-                        <li><a href="flashcards.html">Flashcards</a></li>
-                    </ul>
-                    <p class="copyright">
-                        © 2023 Joshua Rizzello. All rights reserved.
-                    </p>
-                </div>
+                <p>&copy; 2024 Joshuari</p>
             </div>
         </footer>
 
-        <!-- JavaScript for mobile navigation -->
         <script>
-            // Mobile navigation toggle
-            const hamburger = document.querySelector(".hamburger");
-            const navLinks = document.querySelector(".nav-links");
+            let deck = [];
+            let currentIndex = 0;
 
-            hamburger.addEventListener("click", () => {
-                navLinks.classList.toggle("active");
+            // Elementi DOM
+            const fileInput = document.getElementById("file-input");
+            const scene = document.getElementById("scene");
+            const card = document.getElementById("card");
+            const controls = document.getElementById("controls");
+            const instructionText = document.getElementById("instruction-text");
+
+            // Elementi Testo
+            const hanziEl = document.getElementById("hanzi");
+            const pinyinEl = document.getElementById("pinyin");
+            const translationEl = document.getElementById("translation");
+
+            // Pulsanti
+            const pinyinBtn = document.getElementById("show-pinyin-btn");
+            const nextBtn = document.getElementById("next-btn");
+
+            // 1. CARICAMENTO FILE
+            fileInput.addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    try {
+                        deck = JSON.parse(event.target.result);
+                        if (deck.length > 0) {
+                            deck.sort(() => Math.random() - 0.5); // Mischia
+                            currentIndex = 0;
+                            loadCardData();
+
+                            // Mostra interfaccia
+                            fileInput.style.display = "none";
+                            instructionText.style.display = "none";
+                            scene.style.display = "block";
+                            controls.style.display = "flex";
+                        }
+                    } catch (err) {
+                        alert("Errore nel file JSON.");
+                    }
+                };
+                reader.readAsText(file);
             });
 
-            // Close mobile menu when clicking a link
-            document.querySelectorAll(".nav-links a").forEach((link) => {
-                link.addEventListener("click", () => {
-                    navLinks.classList.remove("active");
-                });
+            // 2. FUNZIONE PER CARICARE I DATI
+            function loadCardData() {
+                const data = deck[currentIndex];
+
+                // Resetta lo stato visivo
+                card.classList.remove("is-flipped"); // Torna sul fronte
+                pinyinEl.style.visibility = "hidden"; // Nascondi pinyin
+
+                // Imposta i testi con un piccolo ritardo per evitare spoiler mentre gira
+                setTimeout(() => {
+                    hanziEl.textContent = data.character;
+                    pinyinEl.textContent = data.pinyin;
+                    translationEl.textContent = data.translation;
+                }, 200);
+            }
+
+            // 3. EVENTO: MOSTRA PINYIN (Bottone Grigio)
+            pinyinBtn.addEventListener("click", (e) => {
+                e.stopPropagation(); // Evita che il click passi alla card
+                pinyinEl.style.visibility = "visible";
+            });
+
+            // 4. EVENTO: GIRA LA CARD (Click sulla Card)
+            card.addEventListener("click", () => {
+                card.classList.toggle("is-flipped");
+            });
+
+            // 5. EVENTO: PROSSIMA PAROLA (Bottone Nero)
+            nextBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % deck.length;
+                if (currentIndex === 0) deck.sort(() => Math.random() - 0.5); // Rimischia se finito
+                loadCardData();
             });
         </script>
     </body>
