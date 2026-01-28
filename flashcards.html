@@ -4,135 +4,517 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Flashcards - Joshuari</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
         <link rel="stylesheet" href="style.css" />
         <style>
-            /* --- LAYOUT GENERALE --- */
+            :root {
+                --ink-black: #1a1a1a;
+                --seal-red: #c41e3a;
+                --seal-red-dark: #9a1830;
+                --rice-paper: #f7f5f0;
+                --rice-paper-dark: #e8e4d9;
+                --bamboo: #5a6b4e;
+                --gold-accent: #d4af37;
+                --shadow: rgba(0, 0, 0, 0.08);
+                --shadow-heavy: rgba(0, 0, 0, 0.15);
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                background: linear-gradient(135deg, #f7f5f0 0%, #e8e4d9 100%);
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+                color: var(--ink-black);
+                min-height: 100vh;
+                position: relative;
+                overflow-x: hidden;
+            }
+
+            /* Texture sottile di carta di riso */
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    radial-gradient(
+                        circle at 20% 50%,
+                        rgba(196, 30, 58, 0.03) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 80% 80%,
+                        rgba(90, 107, 78, 0.03) 0%,
+                        transparent 50%
+                    );
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            /* --- HEADER ELEGANTE --- */
+            header {
+                background: rgba(255, 255, 255, 0.6);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                padding: 1.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            header .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            header h1 {
+                font-family: "Crimson Text", serif;
+                font-size: 1.8rem;
+                font-weight: 600;
+                margin: 0;
+                color: var(--ink-black);
+                letter-spacing: -0.02em;
+                position: relative;
+            }
+
+            header h1::after {
+                content: "";
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: var(--seal-red);
+                border-radius: 50%;
+                margin-left: 4px;
+                vertical-align: super;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                gap: 2rem;
+                margin: 0;
+                padding: 0;
+            }
+
+            nav a {
+                text-decoration: none;
+                color: var(--ink-black);
+                font-weight: 400;
+                font-size: 0.95rem;
+                opacity: 0.7;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            nav a:hover {
+                opacity: 1;
+            }
+
+            nav a.active {
+                opacity: 1;
+                font-weight: 500;
+            }
+
+            nav a.active::after {
+                content: "";
+                position: absolute;
+                bottom: -6px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: var(--seal-red);
+                border-radius: 2px;
+            }
+
+            /* --- SEZIONE PRINCIPALE --- */
             .flashcard-section {
-                padding: 40px 0;
+                padding: 60px 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                min-height: 80vh; /* Occupa buona parte dello schermo */
-                font-family: sans-serif;
+                min-height: calc(100vh - 200px);
             }
 
-            /* --- CONTENITORE PROSPETTIVA (SCENA) --- */
+            .flashcard-section .container {
+                width: 100%;
+                max-width: 600px;
+                text-align: center;
+            }
+
+            h2 {
+                font-family: "Crimson Text", serif;
+                font-size: 2.5rem;
+                font-weight: 400;
+                margin-bottom: 0.5rem;
+                color: var(--ink-black);
+                opacity: 0.9;
+            }
+
+            #instruction-text {
+                color: #666;
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+                font-weight: 300;
+                font-style: italic;
+                font-family: "Crimson Text", serif;
+            }
+
+            /* --- INPUT FILE STILIZZATO --- */
+            .file-upload-wrapper {
+                position: relative;
+                display: inline-block;
+                margin-bottom: 2rem;
+            }
+
+            #file-input {
+                display: none;
+            }
+
+            .file-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px 28px;
+                background: white;
+                border: 2px dashed var(--rice-paper-dark);
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+                color: #666;
+                box-shadow: 0 2px 8px var(--shadow);
+            }
+
+            .file-label:hover {
+                border-color: var(--seal-red);
+                color: var(--seal-red);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px var(--shadow-heavy);
+            }
+
+            .file-label::before {
+                content: "↑";
+                font-size: 1.2rem;
+            }
+
+            /* --- SCENA 3D --- */
             .scene {
-                width: 90%;
-                max-width: 400px;
-                height: 300px;
-                margin: 20px auto;
-                perspective: 1000px; /* Dà profondità al 3D */
-                display: none; /* Nascosto finché non carichi il file */
+                width: 100%;
+                max-width: 420px;
+                height: 320px;
+                margin: 0 auto 40px;
+                perspective: 1200px;
+                display: none;
             }
 
-            /* --- LA CARD STESSA --- */
+            /* --- LA CARD --- */
             .card {
                 width: 100%;
                 height: 100%;
                 position: relative;
-                transition: transform 0.6s;
+                transition: transform 0.8s
+                    cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 transform-style: preserve-3d;
                 cursor: pointer;
             }
 
-            /* Classe aggiunta via JS per girare la card */
             .card.is-flipped {
                 transform: rotateY(180deg);
             }
 
-            /* --- FACCE DELLA CARD (FRONTE E RETRO) --- */
+            .card:hover {
+                transform: translateY(-5px) rotateX(2deg);
+            }
+
+            .card.is-flipped:hover {
+                transform: rotateY(180deg) translateY(-5px) rotateX(2deg);
+            }
+
+            /* --- FACCE DELLA CARD --- */
             .card-face {
                 position: absolute;
                 width: 100%;
                 height: 100%;
-                -webkit-backface-visibility: hidden; /* Nasconde il retro quando non girata */
+                -webkit-backface-visibility: hidden;
                 backface-visibility: hidden;
-                border-radius: 15px;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                border: 2px solid #eee;
-                background-color: white !important; /* Forza sfondo bianco */
+                border-radius: 20px;
+                background: white;
+                box-shadow:
+                    0 10px 40px -10px var(--shadow-heavy),
+                    0 0 0 1px rgba(0, 0, 0, 0.02),
+                    inset 0 0 80px rgba(247, 245, 240, 0.3);
+                border: 1px solid rgba(0, 0, 0, 0.06);
 
-                /* Centratura del testo */
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 text-align: center;
-                padding: 20px;
-                box-sizing: border-box;
+                padding: 40px;
+                overflow: hidden;
             }
 
-            /* Faccia Anteriore (Cinese + Pinyin) */
+            /* Dettaglio decorativo angoli */
+            .card-face::before,
+            .card-face::after {
+                content: "";
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                border: 2px solid var(--rice-paper-dark);
+                opacity: 0.3;
+            }
+
+            .card-face::before {
+                top: 20px;
+                left: 20px;
+                border-right: none;
+                border-bottom: none;
+            }
+
+            .card-face::after {
+                bottom: 20px;
+                right: 20px;
+                border-left: none;
+                border-top: none;
+            }
+
             .card-front {
-                background-color: white;
+                background: linear-gradient(180deg, #ffffff 0%, #faf9f6 100%);
             }
 
-            /* Faccia Posteriore (Traduzione) */
             .card-back {
-                background-color: white;
-                transform: rotateY(180deg); /* È già girata all'inizio */
+                background: linear-gradient(180deg, #faf9f6 0%, #f5f4f0 100%);
+                transform: rotateY(180deg);
             }
 
-            /* --- STILI TESTO (Forzati neri/visibili) --- */
+            /* --- TIPOGRAFIA CARD --- */
             .hanzi {
-                font-size: 2.5rem;
-                color: #0a0a0a !important; /* Nero assoluto */
-                font-weight: 500;
-                margin-bottom: 15px;
+                /* Font di sistema Apple per Cinese, con fallback classici */
+                font-family:
+                    "PingFang SC", "Hiragino Sans GB", "STHeiti", "Heiti SC",
+                    "Microsoft YaHei", "SimHei", sans-serif;
+                font-size: 4.5rem;
+                font-weight: 600;
+                color: var(--ink-black);
+                margin-bottom: 20px;
+                line-height: 1.2;
+                letter-spacing: 0.05em;
+                position: relative;
+                display: inline-block;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+            /* Sigillo decorativo dietro il carattere */
+            .hanzi::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 140px;
+                height: 140px;
+                background: radial-gradient(
+                    circle,
+                    rgba(196, 30, 58, 0.06) 0%,
+                    transparent 70%
+                );
+                border-radius: 50%;
+                z-index: -1;
             }
 
             .pinyin {
+                font-family: "Crimson Text", serif;
                 font-size: 1.8rem;
-                color: #0066cc !important; /* Blu per distinzione, ma ben visibile */
-                visibility: hidden; /* Nascosto all'inizio */
-                font-weight: 500;
+                color: var(--bamboo);
+                visibility: hidden;
+                font-weight: 400;
+                font-style: italic;
+                letter-spacing: 0.15em;
+                margin-top: 10px;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .pinyin[style*="visible"] {
+                opacity: 1;
             }
 
             .translation {
-                font-size: 1.8rem;
-                color: #0a0a0a !important; /* Nero assoluto */
-                font-weight: 500;
+                font-family: "Crimson Text", serif;
+                font-size: 2rem;
+                color: var(--ink-black);
+                font-weight: 400;
+                line-height: 1.4;
+                padding: 0 20px;
+            }
+
+            .translation::before {
+                content: "“";
+                display: block;
+                font-size: 3rem;
+                color: var(--rice-paper-dark);
+                line-height: 1;
+                margin-bottom: -10px;
+                font-family: Georgia, serif;
             }
 
             /* --- CONTROLLI --- */
             .controls-area {
-                display: none; /* Nascosta all'inizio */
-                flex-direction: column;
+                display: none;
+                flex-direction: row;
                 gap: 15px;
-                margin-top: 20px;
+                margin-top: 10px;
                 align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
             .btn {
-                padding: 12px 24px;
+                padding: 14px 32px;
                 border: none;
-                border-radius: 8px;
-                font-size: 1rem;
+                border-radius: 50px;
+                font-size: 0.95rem;
                 cursor: pointer;
-                transition: background 0.2s;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                font-family: "Inter", sans-serif;
+                font-weight: 500;
+                letter-spacing: 0.02em;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: translate(-50%, -50%);
+                transition:
+                    width 0.6s,
+                    height 0.6s;
+            }
+
+            .btn:active::before {
                 width: 200px;
+                height: 200px;
             }
 
             .btn-pinyin {
-                background-color: #e0e0e0;
-                color: #333;
-                border: 1px solid #ccc;
+                background: white;
+                color: var(--bamboo);
+                border: 1.5px solid var(--rice-paper-dark);
+                box-shadow: 0 2px 8px var(--shadow);
+                min-width: 140px;
             }
+
             .btn-pinyin:hover {
-                background-color: #d0d0d0;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px var(--shadow-heavy);
+            }
+
+            /* Stato attivo quando il pinyin è visibile */
+            .btn-pinyin.active {
+                background: var(--bamboo);
+                color: white;
+                border-color: var(--bamboo);
             }
 
             .btn-next {
-                background-color: #333;
+                background: var(--ink-black);
                 color: white;
-            }
-            .btn-next:hover {
-                background-color: #555;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             }
 
-            #file-input {
-                margin-bottom: 20px;
+            .btn-next:hover {
+                background: var(--seal-red);
+                transform: translateY(-2px) scale(1.02);
+                box-shadow: 0 6px 20px rgba(196, 30, 58, 0.3);
+            }
+
+            /* --- FOOTER --- */
+            footer {
+                margin-top: auto;
+                padding: 2rem;
+                text-align: center;
+                color: #999;
+                font-size: 0.9rem;
+                font-weight: 300;
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                background: rgba(255, 255, 255, 0.4);
+            }
+
+            /* --- ANIMAZIONI --- */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .scene {
+                animation: fadeIn 0.6s ease-out;
+            }
+
+            /* --- RESPONSIVE --- */
+            @media (max-width: 480px) {
+                h2 {
+                    font-size: 2rem;
+                }
+
+                .scene {
+                    height: 280px;
+                }
+
+                .hanzi {
+                    font-size: 3.5rem;
+                }
+
+                .translation {
+                    font-size: 1.5rem;
+                }
+
+                .controls-area {
+                    flex-direction: column;
+                    width: 100%;
+                    padding: 0 20px;
+                }
+
+                .btn {
+                    width: 100%;
+                }
+            }
+
+            /* Stato iniziale input */
+            #file-input[style*="none"] + .file-upload-wrapper {
+                display: none;
             }
         </style>
     </head>
@@ -143,20 +525,29 @@
                 <nav>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="flashcards.html">Flashcards</a></li>
+                        <li>
+                            <a href="flashcards.html" class="active"
+                                >Flashcards</a
+                            >
+                        </li>
                     </ul>
                 </nav>
             </div>
         </header>
 
         <section class="flashcard-section">
-            <div class="container" style="text-align: center">
+            <div class="container">
                 <h2>Ripasso Cinese</h2>
                 <p id="instruction-text">
-                    Carica il tuo mazzo JSON per iniziare.
+                    Carica il tuo mazzo JSON per iniziare lo studio
                 </p>
 
-                <input type="file" id="file-input" accept=".json" />
+                <div class="file-upload-wrapper">
+                    <input type="file" id="file-input" accept=".json" />
+                    <label for="file-input" class="file-label">
+                        Seleziona file JSON
+                    </label>
+                </div>
 
                 <div class="scene" id="scene">
                     <div class="card" id="card">
@@ -176,7 +567,7 @@
                         Mostra Pinyin
                     </button>
                     <button class="btn btn-next" id="next-btn">
-                        Prossima Parola
+                        Prossima Parola →
                     </button>
                 </div>
             </div>
@@ -184,7 +575,7 @@
 
         <footer>
             <div class="container">
-                <p>&copy; 2024 Joshuari</p>
+                <p>&copy; 2026 Joshuari</p>
             </div>
         </footer>
 
@@ -223,7 +614,9 @@
                             loadCardData();
 
                             // Mostra interfaccia
-                            fileInput.style.display = "none";
+                            document.querySelector(
+                                ".file-upload-wrapper",
+                            ).style.display = "none";
                             instructionText.style.display = "none";
                             scene.style.display = "block";
                             controls.style.display = "flex";
@@ -242,6 +635,9 @@
                 // Resetta lo stato visivo
                 card.classList.remove("is-flipped"); // Torna sul fronte
                 pinyinEl.style.visibility = "hidden"; // Nascondi pinyin
+                pinyinEl.style.opacity = "0";
+                pinyinBtn.classList.remove("active"); // Resetta bottone
+                pinyinBtn.textContent = "Mostra Pinyin";
 
                 // Imposta i testi con un piccolo ritardo per evitare spoiler mentre gira
                 setTimeout(() => {
@@ -251,10 +647,25 @@
                 }, 200);
             }
 
-            // 3. EVENTO: MOSTRA PINYIN (Bottone Grigio)
+            // 3. EVENTO: TOGGLE PINYIN (mostra/nascondi)
             pinyinBtn.addEventListener("click", (e) => {
                 e.stopPropagation(); // Evita che il click passi alla card
-                pinyinEl.style.visibility = "visible";
+
+                const isVisible = pinyinEl.style.visibility === "visible";
+
+                if (isVisible) {
+                    // Nascondi
+                    pinyinEl.style.visibility = "hidden";
+                    pinyinEl.style.opacity = "0";
+                    pinyinBtn.classList.remove("active");
+                    pinyinBtn.textContent = "Mostra Pinyin";
+                } else {
+                    // Mostra
+                    pinyinEl.style.visibility = "visible";
+                    pinyinEl.style.opacity = "1";
+                    pinyinBtn.classList.add("active");
+                    pinyinBtn.textContent = "Nascondi Pinyin";
+                }
             });
 
             // 4. EVENTO: GIRA LA CARD (Click sulla Card)
