@@ -7,7 +7,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
             rel="stylesheet"
         />
         <link rel="stylesheet" href="style.css" />
@@ -31,7 +31,11 @@
             body {
                 margin: 0;
                 background: linear-gradient(135deg, #f7f5f0 0%, #e8e4d9 100%);
-                font-family: "Inter", sans-serif;
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
                 color: var(--ink-black);
                 min-height: 100vh;
                 position: relative;
@@ -304,15 +308,20 @@
 
             /* --- TIPOGRAFIA CARD --- */
             .hanzi {
-                font-family: "Noto Serif SC", serif;
-                font-size: 4rem;
-                font-weight: 700;
+                /* Font di sistema Apple per Cinese, con fallback classici */
+                font-family:
+                    "PingFang SC", "Hiragino Sans GB", "STHeiti", "Heiti SC",
+                    "Microsoft YaHei", "SimHei", sans-serif;
+                font-size: 4.5rem;
+                font-weight: 600;
                 color: var(--ink-black);
                 margin-bottom: 20px;
                 line-height: 1.2;
-                letter-spacing: 0.1em;
+                letter-spacing: 0.05em;
                 position: relative;
                 display: inline-block;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
 
             /* Sigillo decorativo dietro il carattere */
@@ -322,11 +331,11 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: 120px;
-                height: 120px;
+                width: 140px;
+                height: 140px;
                 background: radial-gradient(
                     circle,
-                    rgba(196, 30, 58, 0.08) 0%,
+                    rgba(196, 30, 58, 0.06) 0%,
                     transparent 70%
                 );
                 border-radius: 50%;
@@ -343,7 +352,7 @@
                 letter-spacing: 0.15em;
                 margin-top: 10px;
                 opacity: 0;
-                transition: opacity 0.4s ease;
+                transition: opacity 0.3s ease;
             }
 
             .pinyin[style*="visible"] {
@@ -419,13 +428,19 @@
                 color: var(--bamboo);
                 border: 1.5px solid var(--rice-paper-dark);
                 box-shadow: 0 2px 8px var(--shadow);
+                min-width: 140px;
             }
 
             .btn-pinyin:hover {
-                border-color: var(--bamboo);
-                background: #f8f9f6;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 12px var(--shadow-heavy);
+            }
+
+            /* Stato attivo quando il pinyin è visibile */
+            .btn-pinyin.active {
+                background: var(--bamboo);
+                color: white;
+                border-color: var(--bamboo);
             }
 
             .btn-next {
@@ -479,7 +494,7 @@
                 }
 
                 .hanzi {
-                    font-size: 3rem;
+                    font-size: 3.5rem;
                 }
 
                 .translation {
@@ -560,7 +575,7 @@
 
         <footer>
             <div class="container">
-                <p>&copy; 2024 Joshuari</p>
+                <p>&copy; 2026 Joshuari</p>
             </div>
         </footer>
 
@@ -620,6 +635,9 @@
                 // Resetta lo stato visivo
                 card.classList.remove("is-flipped"); // Torna sul fronte
                 pinyinEl.style.visibility = "hidden"; // Nascondi pinyin
+                pinyinEl.style.opacity = "0";
+                pinyinBtn.classList.remove("active"); // Resetta bottone
+                pinyinBtn.textContent = "Mostra Pinyin";
 
                 // Imposta i testi con un piccolo ritardo per evitare spoiler mentre gira
                 setTimeout(() => {
@@ -629,10 +647,25 @@
                 }, 200);
             }
 
-            // 3. EVENTO: MOSTRA PINYIN (Bottone Grigio)
+            // 3. EVENTO: TOGGLE PINYIN (mostra/nascondi)
             pinyinBtn.addEventListener("click", (e) => {
                 e.stopPropagation(); // Evita che il click passi alla card
-                pinyinEl.style.visibility = "visible";
+
+                const isVisible = pinyinEl.style.visibility === "visible";
+
+                if (isVisible) {
+                    // Nascondi
+                    pinyinEl.style.visibility = "hidden";
+                    pinyinEl.style.opacity = "0";
+                    pinyinBtn.classList.remove("active");
+                    pinyinBtn.textContent = "Mostra Pinyin";
+                } else {
+                    // Mostra
+                    pinyinEl.style.visibility = "visible";
+                    pinyinEl.style.opacity = "1";
+                    pinyinBtn.classList.add("active");
+                    pinyinBtn.textContent = "Nascondi Pinyin";
+                }
             });
 
             // 4. EVENTO: GIRA LA CARD (Click sulla Card)
