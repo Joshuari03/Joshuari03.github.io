@@ -2,684 +2,387 @@
 <html lang="it">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Flashcards - Joshuari</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
-            rel="stylesheet"
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
-        <link rel="stylesheet" href="style.css" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <title>Erasmus Budget Tracker</title>
         <style>
-            :root {
-                --ink-black: #1a1a1a;
-                --seal-red: #c41e3a;
-                --seal-red-dark: #9a1830;
-                --rice-paper: #f7f5f0;
-                --rice-paper-dark: #e8e4d9;
-                --bamboo: #5a6b4e;
-                --gold-accent: #d4af37;
-                --shadow: rgba(0, 0, 0, 0.08);
-                --shadow-heavy: rgba(0, 0, 0, 0.15);
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
             body {
+                font-family: -apple-system, sans-serif;
+                background: #f4f7f6;
+                padding: 20px;
+                color: #333;
                 margin: 0;
-                background: linear-gradient(135deg, #f7f5f0 0%, #e8e4d9 100%);
-                font-family:
-                    "Inter",
-                    -apple-system,
-                    BlinkMacSystemFont,
-                    sans-serif;
-                color: var(--ink-black);
-                min-height: 100vh;
-                position: relative;
-                overflow-x: hidden;
+                padding-top: 20px;
+                padding-bottom: 40px;
             }
-
-            /* Texture sottile di carta di riso */
-            body::before {
-                content: "";
-                position: fixed;
-                top: 0;
-                left: 0;
+            .card {
+                background: white;
+                padding: 20px;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                margin-bottom: 20px;
+            }
+            h1,
+            h2 {
+                font-size: 1.2rem;
+                margin-top: 0;
+                color: #2c3e50;
+            }
+            .stat {
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+            .label {
+                font-size: 0.8rem;
+                color: #7f8c8d;
+                text-transform: uppercase;
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+            }
+            input,
+            select,
+            button {
                 width: 100%;
-                height: 100%;
-                background-image:
-                    radial-gradient(
-                        circle at 20% 50%,
-                        rgba(196, 30, 58, 0.03) 0%,
-                        transparent 50%
-                    ),
-                    radial-gradient(
-                        circle at 80% 80%,
-                        rgba(90, 107, 78, 0.03) 0%,
-                        transparent 50%
-                    );
-                pointer-events: none;
-                z-index: -1;
+                padding: 12px;
+                margin: 8px 0 15px 0;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                box-sizing: border-box;
+                font-size: 16px;
+            }
+            button {
+                background: #3498db;
+                color: white;
+                border: none;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.3s;
+            }
+            button:hover {
+                background: #2980b9;
+            }
+            button.setup-btn {
+                background: #2c3e50;
+                margin-bottom: 0;
+            }
+            button.setup-btn:hover {
+                background: #1a252f;
+            }
+            .extra-budget {
+                color: #27ae60;
+            }
+            .warning {
+                color: #e74c3c;
+            }
+            .note {
+                font-size: 0.8rem;
+                color: #e67e22;
+                margin-top: 5px;
+                display: block;
             }
 
-            /* --- HEADER ELEGANTE --- */
-            header {
-                background: rgba(255, 255, 255, 0.6);
-                backdrop-filter: blur(10px);
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-                padding: 1.5rem 0;
-                position: sticky;
-                top: 0;
-                z-index: 100;
+            /* Stili per la cronologia */
+            .history-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
             }
-
-            header .container {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 2rem;
+            .history-item {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #eee;
             }
-
-            header h1 {
-                font-family: "Crimson Text", serif;
-                font-size: 1.8rem;
-                font-weight: 600;
-                margin: 0;
-                color: var(--ink-black);
-                letter-spacing: -0.02em;
-                position: relative;
-            }
-
-            header h1::after {
-                content: "";
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: var(--seal-red);
-                border-radius: 50%;
-                margin-left: 4px;
-                vertical-align: super;
-            }
-
-            nav ul {
-                list-style: none;
-                display: flex;
-                gap: 2rem;
-                margin: 0;
-                padding: 0;
-            }
-
-            nav a {
-                text-decoration: none;
-                color: var(--ink-black);
-                font-weight: 400;
-                font-size: 0.95rem;
-                opacity: 0.7;
-                transition: all 0.3s ease;
-                position: relative;
-            }
-
-            nav a:hover {
-                opacity: 1;
-            }
-
-            nav a.active {
-                opacity: 1;
-                font-weight: 500;
-            }
-
-            nav a.active::after {
-                content: "";
-                position: absolute;
-                bottom: -6px;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: var(--seal-red);
-                border-radius: 2px;
-            }
-
-            /* --- SEZIONE PRINCIPALE --- */
-            .flashcard-section {
-                padding: 60px 20px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-height: calc(100vh - 200px);
-            }
-
-            .flashcard-section .container {
-                width: 100%;
-                max-width: 600px;
-                text-align: center;
-            }
-
-            h2 {
-                font-family: "Crimson Text", serif;
-                font-size: 2.5rem;
-                font-weight: 400;
-                margin-bottom: 0.5rem;
-                color: var(--ink-black);
-                opacity: 0.9;
-            }
-
-            #instruction-text {
-                color: #666;
-                font-size: 1.1rem;
-                margin-bottom: 2rem;
-                font-weight: 300;
-                font-style: italic;
-                font-family: "Crimson Text", serif;
-            }
-
-            /* --- INPUT FILE STILIZZATO --- */
-            .file-upload-wrapper {
-                position: relative;
-                display: inline-block;
-                margin-bottom: 2rem;
-            }
-
-            #file-input {
-                display: none;
-            }
-
-            .file-label {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                padding: 14px 28px;
-                background: white;
-                border: 2px dashed var(--rice-paper-dark);
-                border-radius: 12px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                font-size: 0.95rem;
-                color: #666;
-                box-shadow: 0 2px 8px var(--shadow);
-            }
-
-            .file-label:hover {
-                border-color: var(--seal-red);
-                color: var(--seal-red);
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px var(--shadow-heavy);
-            }
-
-            .file-label::before {
-                content: "↑";
-                font-size: 1.2rem;
-            }
-
-            /* --- SCENA 3D --- */
-            .scene {
-                width: 100%;
-                max-width: 420px;
-                height: 320px;
-                margin: 0 auto 40px;
-                perspective: 1200px;
-                display: none;
-            }
-
-            /* --- LA CARD --- */
-            .card {
-                width: 100%;
-                height: 100%;
-                position: relative;
-                transition: transform 0.8s
-                    cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                transform-style: preserve-3d;
-                cursor: pointer;
-            }
-
-            .card.is-flipped {
-                transform: rotateY(180deg);
-            }
-
-            .card:hover {
-                transform: translateY(-5px) rotateX(2deg);
-            }
-
-            .card.is-flipped:hover {
-                transform: rotateY(180deg) translateY(-5px) rotateX(2deg);
-            }
-
-            /* --- FACCE DELLA CARD --- */
-            .card-face {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                -webkit-backface-visibility: hidden;
-                backface-visibility: hidden;
-                border-radius: 20px;
-                background: white;
-                box-shadow:
-                    0 10px 40px -10px var(--shadow-heavy),
-                    0 0 0 1px rgba(0, 0, 0, 0.02),
-                    inset 0 0 80px rgba(247, 245, 240, 0.3);
-                border: 1px solid rgba(0, 0, 0, 0.06);
-
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                padding: 40px;
-                overflow: hidden;
-            }
-
-            /* Dettaglio decorativo angoli */
-            .card-face::before,
-            .card-face::after {
-                content: "";
-                position: absolute;
-                width: 40px;
-                height: 40px;
-                border: 2px solid var(--rice-paper-dark);
-                opacity: 0.3;
-            }
-
-            .card-face::before {
-                top: 20px;
-                left: 20px;
-                border-right: none;
+            .history-item:last-child {
                 border-bottom: none;
             }
-
-            .card-face::after {
-                bottom: 20px;
-                right: 20px;
-                border-left: none;
-                border-top: none;
+            .history-details {
+                display: flex;
+                flex-direction: column;
             }
-
-            .card-front {
-                background: linear-gradient(180deg, #ffffff 0%, #faf9f6 100%);
+            .history-amount {
+                font-weight: bold;
+                font-size: 1.1rem;
+                color: #2c3e50;
             }
-
-            .card-back {
-                background: linear-gradient(180deg, #faf9f6 0%, #f5f4f0 100%);
-                transform: rotateY(180deg);
+            .history-cat {
+                font-size: 0.85rem;
+                color: #7f8c8d;
+                text-transform: capitalize;
             }
-
-            /* --- TIPOGRAFIA CARD --- */
-            .hanzi {
-                /* Font di sistema Apple per Cinese, con fallback classici */
-                font-family:
-                    "PingFang SC", "Hiragino Sans GB", "STHeiti", "Heiti SC",
-                    "Microsoft YaHei", "SimHei", sans-serif;
-                font-size: 4.5rem;
-                font-weight: 600;
-                color: var(--ink-black);
-                margin-bottom: 20px;
-                line-height: 1.2;
-                letter-spacing: 0.05em;
-                position: relative;
-                display: inline-block;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
+            .history-date {
+                font-size: 0.75rem;
+                color: #bdc3c7;
             }
-
-            /* Sigillo decorativo dietro il carattere */
-            .hanzi::before {
-                content: "";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 140px;
-                height: 140px;
-                background: radial-gradient(
-                    circle,
-                    rgba(196, 30, 58, 0.06) 0%,
-                    transparent 70%
-                );
-                border-radius: 50%;
-                z-index: -1;
-            }
-
-            .pinyin {
-                font-family: "Crimson Text", serif;
-                font-size: 1.8rem;
-                color: var(--bamboo);
-                visibility: hidden;
-                font-weight: 400;
-                font-style: italic;
-                letter-spacing: 0.15em;
-                margin-top: 10px;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-
-            .pinyin[style*="visible"] {
-                opacity: 1;
-            }
-
-            .translation {
-                font-family: "Crimson Text", serif;
-                font-size: 2rem;
-                color: var(--ink-black);
-                font-weight: 400;
-                line-height: 1.4;
-                padding: 0 20px;
-            }
-
-            .translation::before {
-                content: "“";
-                display: block;
-                font-size: 3rem;
-                color: var(--rice-paper-dark);
-                line-height: 1;
-                margin-bottom: -10px;
-                font-family: Georgia, serif;
-            }
-
-            /* --- CONTROLLI --- */
-            .controls-area {
-                display: none;
-                flex-direction: row;
-                gap: 15px;
-                margin-top: 10px;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .btn {
-                padding: 14px 32px;
-                border: none;
-                border-radius: 50px;
-                font-size: 0.95rem;
-                cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                font-family: "Inter", sans-serif;
-                font-weight: 500;
-                letter-spacing: 0.02em;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .btn::before {
-                content: "";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
-                transform: translate(-50%, -50%);
-                transition:
-                    width 0.6s,
-                    height 0.6s;
-            }
-
-            .btn:active::before {
-                width: 200px;
-                height: 200px;
-            }
-
-            .btn-pinyin {
-                background: white;
-                color: var(--bamboo);
-                border: 1.5px solid var(--rice-paper-dark);
-                box-shadow: 0 2px 8px var(--shadow);
-                min-width: 140px;
-            }
-
-            .btn-pinyin:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px var(--shadow-heavy);
-            }
-
-            /* Stato attivo quando il pinyin è visibile */
-            .btn-pinyin.active {
-                background: var(--bamboo);
+            .delete-btn {
+                width: auto;
+                padding: 8px 12px;
+                margin: 0;
+                background: #e74c3c;
                 color: white;
-                border-color: var(--bamboo);
-            }
-
-            .btn-next {
-                background: var(--ink-black);
-                color: white;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            }
-
-            .btn-next:hover {
-                background: var(--seal-red);
-                transform: translateY(-2px) scale(1.02);
-                box-shadow: 0 6px 20px rgba(196, 30, 58, 0.3);
-            }
-
-            /* --- FOOTER --- */
-            footer {
-                margin-top: auto;
-                padding: 2rem;
-                text-align: center;
-                color: #999;
+                border-radius: 6px;
                 font-size: 0.9rem;
-                font-weight: 300;
-                border-top: 1px solid rgba(0, 0, 0, 0.05);
-                background: rgba(255, 255, 255, 0.4);
             }
-
-            /* --- ANIMAZIONI --- */
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .scene {
-                animation: fadeIn 0.6s ease-out;
-            }
-
-            /* --- RESPONSIVE --- */
-            @media (max-width: 480px) {
-                h2 {
-                    font-size: 2rem;
-                }
-
-                .scene {
-                    height: 280px;
-                }
-
-                .hanzi {
-                    font-size: 3.5rem;
-                }
-
-                .translation {
-                    font-size: 1.5rem;
-                }
-
-                .controls-area {
-                    flex-direction: column;
-                    width: 100%;
-                    padding: 0 20px;
-                }
-
-                .btn {
-                    width: 100%;
-                }
-            }
-
-            /* Stato iniziale input */
-            #file-input[style*="none"] + .file-upload-wrapper {
-                display: none;
+            .delete-btn:hover {
+                background: #c0392b;
             }
         </style>
     </head>
     <body>
-        <header>
-            <div class="container">
-                <h1>Joshuari</h1>
-                <nav>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li>
-                            <a href="flashcards.html" class="active"
-                                >Flashcards</a
-                            >
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
+        <div class="card">
+            <h2>Impostazioni Budget</h2>
+            <span class="label">Budget Totale / Rimanente (€):</span>
+            <input
+                type="number"
+                id="setupBudget"
+                placeholder="Es. 3500"
+                inputmode="decimal"
+            />
+            <span class="label">Data fine Erasmus:</span>
+            <input type="date" id="setupDate" />
+            <button class="setup-btn" onclick="saveSettings()">
+                Salva / Modifica Impostazioni
+            </button>
+        </div>
 
-        <section class="flashcard-section">
-            <div class="container">
-                <h2>Ripasso Cinese</h2>
-                <p id="instruction-text">
-                    Carica il tuo mazzo JSON per iniziare lo studio
-                </p>
+        <div class="card">
+            <span class="label">Margine Sicuro per Extra</span>
+            <div id="extraMargin" class="stat extra-budget">€ 0.00</div>
+            <span class="note"
+                >*Include +20% di sovrastima sulle spese quotidiane
+                calcolate.</span
+            >
 
-                <div class="file-upload-wrapper">
-                    <input type="file" id="file-input" accept=".json" />
-                    <label for="file-input" class="file-label">
-                        Seleziona file JSON
-                    </label>
-                </div>
-
-                <div class="scene" id="scene">
-                    <div class="card" id="card">
-                        <div class="card-face card-front">
-                            <div class="hanzi" id="hanzi"></div>
-                            <div class="pinyin" id="pinyin"></div>
-                        </div>
-
-                        <div class="card-face card-back">
-                            <div class="translation" id="translation"></div>
-                        </div>
+            <div
+                style="
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 20px;
+                "
+            >
+                <div>
+                    <span class="label">Fondo Attuale</span>
+                    <div
+                        id="budgetLeft"
+                        style="font-size: 1.2rem; font-weight: bold"
+                    >
+                        € 0
                     </div>
                 </div>
-
-                <div class="controls-area" id="controls">
-                    <button class="btn btn-pinyin" id="show-pinyin-btn">
-                        Mostra Pinyin
-                    </button>
-                    <button class="btn btn-next" id="next-btn">
-                        Prossima Parola →
-                    </button>
+                <div style="text-align: right">
+                    <span class="label">Giorni alla fine</span>
+                    <div
+                        id="daysLeft"
+                        style="font-size: 1.2rem; font-weight: bold"
+                    >
+                        -
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <footer>
-            <div class="container">
-                <p>&copy; 2026 Joshuari</p>
-            </div>
-        </footer>
+        <div class="card">
+            <h1>Aggiungi Spesa</h1>
+            <input
+                type="number"
+                id="amount"
+                placeholder="Importo (€)"
+                inputmode="decimal"
+            />
+            <select id="category">
+                <option value="cibo">
+                    Cibo / Spesa Quotidiana (Variabile)
+                </option>
+                <option value="extra">Viaggi / Vestiti / Svago (Extra)</option>
+                <option value="fisso">Affitto / Utenze (Spesa Fissa)</option>
+            </select>
+            <button onclick="addExpense()">Registra Spesa</button>
+        </div>
+
+        <div class="card">
+            <h2>Storico Spese</h2>
+            <ul id="historyContainer" class="history-list"></ul>
+        </div>
 
         <script>
-            let deck = [];
-            let currentIndex = 0;
+            const MARGINE_SICUREZZA = 1.2; // +20% di sovrastima sulle spese variabili
 
-            // Elementi DOM
-            const fileInput = document.getElementById("file-input");
-            const scene = document.getElementById("scene");
-            const card = document.getElementById("card");
-            const controls = document.getElementById("controls");
-            const instructionText = document.getElementById("instruction-text");
+            // Carica dati dal LocalStorage
+            let expenses =
+                JSON.parse(localStorage.getItem("erasmus_expenses")) || [];
+            let settings = JSON.parse(
+                localStorage.getItem("erasmus_settings"),
+            ) || { budget: 0, endDate: null };
 
-            // Elementi Testo
-            const hanziEl = document.getElementById("hanzi");
-            const pinyinEl = document.getElementById("pinyin");
-            const translationEl = document.getElementById("translation");
+            // Popola i campi all'avvio
+            if (settings.budget)
+                document.getElementById("setupBudget").value = settings.budget;
+            if (settings.endDate)
+                document.getElementById("setupDate").value = settings.endDate;
 
-            // Pulsanti
-            const pinyinBtn = document.getElementById("show-pinyin-btn");
-            const nextBtn = document.getElementById("next-btn");
+            function saveSettings() {
+                const budget = parseFloat(
+                    document.getElementById("setupBudget").value,
+                );
+                const endDate = document.getElementById("setupDate").value;
 
-            // 1. CARICAMENTO FILE
-            fileInput.addEventListener("change", function (e) {
-                const file = e.target.files[0];
-                if (!file) return;
+                if (!budget || !endDate) {
+                    alert("Inserisci sia il budget che la data di fine.");
+                    return;
+                }
 
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    try {
-                        deck = JSON.parse(event.target.result);
-                        if (deck.length > 0) {
-                            deck.sort(() => Math.random() - 0.5); // Mischia
-                            currentIndex = 0;
-                            loadCardData();
-
-                            // Mostra interfaccia
-                            document.querySelector(
-                                ".file-upload-wrapper",
-                            ).style.display = "none";
-                            instructionText.style.display = "none";
-                            scene.style.display = "block";
-                            controls.style.display = "flex";
-                        }
-                    } catch (err) {
-                        alert("Errore nel file JSON.");
-                    }
-                };
-                reader.readAsText(file);
-            });
-
-            // 2. FUNZIONE PER CARICARE I DATI
-            function loadCardData() {
-                const data = deck[currentIndex];
-
-                // Resetta lo stato visivo
-                card.classList.remove("is-flipped"); // Torna sul fronte
-                pinyinEl.style.visibility = "hidden"; // Nascondi pinyin
-                pinyinEl.style.opacity = "0";
-                pinyinBtn.classList.remove("active"); // Resetta bottone
-                pinyinBtn.textContent = "Mostra Pinyin";
-
-                // Imposta i testi con un piccolo ritardo per evitare spoiler mentre gira
-                setTimeout(() => {
-                    hanziEl.textContent = data.character;
-                    pinyinEl.textContent = data.pinyin;
-                    translationEl.textContent = data.translation;
-                }, 200);
+                settings = { budget, endDate };
+                localStorage.setItem(
+                    "erasmus_settings",
+                    JSON.stringify(settings),
+                );
+                calculate();
+                alert("Impostazioni aggiornate con successo!");
             }
 
-            // 3. EVENTO: TOGGLE PINYIN (mostra/nascondi)
-            pinyinBtn.addEventListener("click", (e) => {
-                e.stopPropagation(); // Evita che il click passi alla card
-
-                const isVisible = pinyinEl.style.visibility === "visible";
-
-                if (isVisible) {
-                    // Nascondi
-                    pinyinEl.style.visibility = "hidden";
-                    pinyinEl.style.opacity = "0";
-                    pinyinBtn.classList.remove("active");
-                    pinyinBtn.textContent = "Mostra Pinyin";
-                } else {
-                    // Mostra
-                    pinyinEl.style.visibility = "visible";
-                    pinyinEl.style.opacity = "1";
-                    pinyinBtn.classList.add("active");
-                    pinyinBtn.textContent = "Nascondi Pinyin";
+            function addExpense() {
+                if (!settings.budget || !settings.endDate) {
+                    alert("Prima salva le impostazioni del budget in alto!");
+                    return;
                 }
-            });
 
-            // 4. EVENTO: GIRA LA CARD (Click sulla Card)
-            card.addEventListener("click", () => {
-                card.classList.toggle("is-flipped");
-            });
+                const amount = parseFloat(
+                    document.getElementById("amount").value,
+                );
+                const category = document.getElementById("category").value;
+                if (!amount || amount <= 0) return;
 
-            // 5. EVENTO: PROSSIMA PAROLA (Bottone Nero)
-            nextBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                currentIndex = (currentIndex + 1) % deck.length;
-                if (currentIndex === 0) deck.sort(() => Math.random() - 0.5); // Rimischia se finito
-                loadCardData();
-            });
+                const newExpense = {
+                    amount: amount,
+                    category: category,
+                    date: new Date().toISOString(),
+                };
+
+                expenses.push(newExpense);
+                localStorage.setItem(
+                    "erasmus_expenses",
+                    JSON.stringify(expenses),
+                );
+
+                document.getElementById("amount").value = ""; // Pulisce il campo
+                calculate();
+            }
+
+            function deleteExpense(index) {
+                if (confirm("Sei sicuro di voler eliminare questa spesa?")) {
+                    expenses.splice(index, 1); // Rimuove l'elemento all'indice specifico
+                    localStorage.setItem(
+                        "erasmus_expenses",
+                        JSON.stringify(expenses),
+                    );
+                    calculate();
+                }
+            }
+
+            function renderHistory() {
+                const container = document.getElementById("historyContainer");
+                container.innerHTML = ""; // Svuota la lista
+
+                if (expenses.length === 0) {
+                    container.innerHTML =
+                        '<li style="color: #999; font-size: 0.9rem;">Nessuna spesa registrata.</li>';
+                    return;
+                }
+
+                // Mostriamo l'array dall'ultimo inserito (più recente) al primo
+                for (let i = expenses.length - 1; i >= 0; i--) {
+                    const e = expenses[i];
+                    const dateObj = new Date(e.date);
+                    const dateString =
+                        dateObj.toLocaleDateString("it-IT") +
+                        " " +
+                        dateObj.toLocaleTimeString("it-IT", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
+
+                    const li = document.createElement("li");
+                    li.className = "history-item";
+                    li.innerHTML = `
+                    <div class="history-details">
+                        <span class="history-amount">€ ${e.amount.toFixed(2)}</span>
+                        <span class="history-cat">${e.category}</span>
+                        <span class="history-date">${dateString}</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteExpense(${i})">
+                        <i class="fas fa-trash"></i> X
+                    </button>
+                `;
+                    container.appendChild(li);
+                }
+            }
+
+            function calculate() {
+                renderHistory(); // Aggiorna sempre la vista della cronologia
+
+                if (!settings.budget || !settings.endDate) return;
+
+                const oggi = new Date();
+                const dataFine = new Date(settings.endDate);
+
+                let primaSpesaData =
+                    expenses.length > 0 ? new Date(expenses[0].date) : oggi;
+
+                // Per evitare divisioni per 0, consideriamo almeno 1 giorno trascorso
+                const giorniTrascorsi = Math.max(
+                    1,
+                    (oggi - primaSpesaData) / (1000 * 60 * 60 * 24),
+                );
+                // I giorni rimanenti non possono essere negativi
+                const giorniMancanti = Math.max(
+                    0,
+                    (dataFine - oggi) / (1000 * 60 * 60 * 24),
+                );
+
+                let totalFissi = 0,
+                    totalCibo = 0,
+                    totalExtraUsati = 0;
+
+                expenses.forEach((e) => {
+                    if (e.category === "fisso") totalFissi += e.amount;
+                    if (e.category === "cibo") totalCibo += e.amount;
+                    if (e.category === "extra") totalExtraUsati += e.amount;
+                });
+
+                // Logica del Margine
+                const mediaCiboReale = totalCibo / giorniTrascorsi;
+                const proiezioneCiboPrudente =
+                    mediaCiboReale * MARGINE_SICUREZZA * giorniMancanti;
+
+                const budgetRimanente =
+                    settings.budget - totalFissi - totalCibo - totalExtraUsati;
+                const marginePerExtra =
+                    budgetRimanente - proiezioneCiboPrudente;
+
+                // Aggiornamento Interfaccia
+                const marginEl = document.getElementById("extraMargin");
+                marginEl.innerText = `€ ${marginePerExtra.toFixed(2)}`;
+                marginEl.className =
+                    marginePerExtra >= 0 ? "stat extra-budget" : "stat warning";
+
+                document.getElementById("budgetLeft").innerText =
+                    `€ ${budgetRimanente.toFixed(2)}`;
+                document.getElementById("daysLeft").innerText =
+                    Math.ceil(giorniMancanti);
+            }
+
+            // Calcola e renderizza i dati all'avvio della pagina
+            calculate();
         </script>
     </body>
 </html>
