@@ -58,7 +58,7 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: 20px 0;
-                position: relative; /* Aiuta a mantenere il contesto su mobile */
+                position: relative;
             }
 
             .logo {
@@ -66,7 +66,7 @@
                 font-weight: 700;
                 color: white;
                 text-decoration: none;
-                z-index: 1001; /* Lo tiene sopra il menu mobile */
+                z-index: 1001;
             }
 
             .logo span {
@@ -98,8 +98,8 @@
                 display: none;
                 cursor: pointer;
                 font-size: 1.5rem;
-                z-index: 1001; /* Lo tiene sopra il menu aperto */
-                padding: 5px; /* Aumenta l'area cliccabile per le dita */
+                z-index: 1001;
+                padding: 5px;
             }
 
             /* Hero Section */
@@ -253,6 +253,8 @@
                 transition:
                     transform 0.3s,
                     box-shadow 0.3s;
+                display: flex;
+                flex-direction: column;
             }
 
             .project-card:hover {
@@ -278,6 +280,9 @@
 
             .project-content {
                 padding: 25px;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
             }
 
             .project-content h3 {
@@ -289,13 +294,15 @@
             .project-content p {
                 color: var(--gray);
                 margin-bottom: 15px;
+                flex-grow: 1;
             }
 
             .project-tags {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
-                margin-top: 15px;
+                margin-top: auto;
+                margin-bottom: 15px;
             }
 
             .tag {
@@ -397,10 +404,13 @@
                 display: flex;
                 list-style: none;
                 margin-bottom: 30px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
             }
 
             .footer-links li {
-                margin: 0 15px;
+                margin: 0;
             }
 
             .footer-links a {
@@ -419,7 +429,7 @@
                 margin-top: 30px;
             }
 
-            /* Responsive Design - IL FIX E' QUI SOTTO */
+            /* Responsive Design */
             @media (max-width: 992px) {
                 .about-content {
                     flex-direction: column;
@@ -435,14 +445,14 @@
                     top: 0;
                     left: -100%;
                     width: 100vw;
-                    height: 100vh; /* Occupa tutto lo schermo */
+                    height: 100vh;
                     flex-direction: column;
                     background-color: var(--primary);
                     text-align: center;
                     transition: left 0.4s ease-in-out;
-                    padding-top: 100px; /* Spazio per la X o per non coprire il logo */
+                    padding-top: 100px;
                     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-                    z-index: 999; /* Si assicura di coprire tutto il resto del sito */
+                    z-index: 999;
                     overflow-y: auto;
                 }
 
@@ -455,7 +465,7 @@
                 }
 
                 .nav-links a {
-                    font-size: 1.5rem; /* Link più grandi per essere tappati meglio su iPhone */
+                    font-size: 1.5rem;
                     display: block;
                     padding: 10px;
                 }
@@ -507,6 +517,7 @@
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="flashcards.html">Flashcards</a></li>
                         <li><a href="spese.html">Spese Erasmus</a></li>
+                        <li><a href="countdown.html">Countdown</a></li>
                     </ul>
                     <div class="hamburger">
                         <i id="menu-icon" class="fas fa-bars"></i>
@@ -688,6 +699,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="project-card">
+                        <div class="project-img">
+                            <img
+                                src="https://images.unsplash.com/photo-1501139083538-0139583c060f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Event Countdown Tracker"
+                            />
+                        </div>
+                        <div class="project-content">
+                            <h3>Event Countdown</h3>
+                            <p>
+                                Una web page dedicata al tracciamento del tempo
+                                rimanente per eventi, traguardi accademici e
+                                scadenze importanti.
+                            </p>
+                            <div class="project-tags">
+                                <span class="tag">HTML</span>
+                                <span class="tag">CSS</span>
+                                <span class="tag">JavaScript</span>
+                            </div>
+                            <a
+                                href="countdown.html"
+                                class="btn"
+                                style="text-align: center"
+                                >Vai al Countdown</a
+                            >
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -764,6 +803,7 @@
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="flashcards.html">Flashcards</a></li>
                         <li><a href="spese.html">Spese Erasmus</a></li>
+                        <li><a href="countdown.html">Countdown</a></li>
                     </ul>
                     <p class="copyright">
                         © 2023 Joshua Rizzello. All rights reserved.
@@ -773,14 +813,12 @@
         </footer>
 
         <script>
-            // JS Aggiornato per essere più robusto su dispositivi mobili
             const hamburger = document.querySelector(".hamburger");
             const navLinks = document.querySelector(".nav-links");
             const menuIcon = document.getElementById("menu-icon");
 
             hamburger.addEventListener("click", () => {
                 navLinks.classList.toggle("active");
-                // Cambia l'icona da hamburger a X quando il menu è aperto
                 if (navLinks.classList.contains("active")) {
                     menuIcon.classList.remove("fa-bars");
                     menuIcon.classList.add("fa-times");
@@ -790,7 +828,6 @@
                 }
             });
 
-            // Chiude il menu mobile quando si clicca un link
             document.querySelectorAll(".nav-links a").forEach((link) => {
                 link.addEventListener("click", () => {
                     navLinks.classList.remove("active");

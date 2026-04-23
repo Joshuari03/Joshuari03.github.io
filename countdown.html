@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Can't Wait to See You! ❤️</title>
+        <style>
+            /* Importazione dei font da Google Fonts */
+            @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Pacifico&display=swap");
+
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                /* Sfondo romantico con sfumatura pastello */
+                background: linear-gradient(
+                    135deg,
+                    #ff9a9e 0%,
+                    #fecfef 99%,
+                    #fecfef 100%
+                );
+                font-family: "Fredoka", sans-serif;
+                color: #4a4a4a;
+            }
+
+            .container {
+                background: rgba(255, 255, 255, 0.85);
+                padding: 40px 50px;
+                border-radius: 30px;
+                box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2);
+                text-align: center;
+                backdrop-filter: blur(5px);
+                max-width: 90%;
+            }
+
+            h1 {
+                font-family: "Pacifico", cursive;
+                color: #ff6b81;
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                margin-top: 0;
+            }
+
+            .message {
+                font-size: 1.5rem;
+                margin-bottom: 25px;
+                color: #666;
+            }
+
+            .countdown-wrapper {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .time-box {
+                background: #fff;
+                padding: 15px 20px;
+                border-radius: 15px;
+                min-width: 70px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            }
+
+            .time-box span {
+                display: block;
+            }
+
+            .number {
+                font-size: 2.5rem;
+                font-weight: 600;
+                color: #ff4757;
+            }
+
+            .label {
+                font-size: 0.9rem;
+                color: #a4b0be;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 5px;
+            }
+
+            .heart {
+                display: inline-block;
+                color: #ff4757;
+                /* Animazione del battito cardiaco */
+                animation: heartbeat 1.5s infinite;
+            }
+
+            @keyframes heartbeat {
+                0% {
+                    transform: scale(1);
+                }
+                20% {
+                    transform: scale(1.25);
+                }
+                40% {
+                    transform: scale(1);
+                }
+                60% {
+                    transform: scale(1.15);
+                }
+                80% {
+                    transform: scale(1);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            /* Adattamento per gli schermi dei telefoni */
+            @media (max-width: 500px) {
+                h1 {
+                    font-size: 2rem;
+                }
+                .number {
+                    font-size: 2rem;
+                }
+                .time-box {
+                    padding: 10px 15px;
+                    min-width: 60px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Distance means so little... <span class="heart">❤️</span></h1>
+            <div class="message" id="dynamic-message">
+                We're seeing each other in:
+            </div>
+
+            <div class="countdown-wrapper" id="countdown">
+                <div class="time-box">
+                    <span class="number" id="days">00</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="hours">00</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="minutes">00</span>
+                    <span class="label">Mins</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="seconds">00</span>
+                    <span class="label">Secs</span>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // === INSERISCI QUI LA VOSTRA DATA ===
+            // Formato: 'Anno-Mese-GiornoTOra:Minuti:Secondi' (La "T" in mezzo è necessaria)
+            const targetDate = new Date("2026-08-20T15:30:00").getTime();
+
+            const countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const difference = targetDate - now;
+
+                // Cosa succede quando il conto alla rovescia finisce:
+                if (difference < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById("countdown").style.display = "none";
+                    document.getElementById("dynamic-message").innerHTML =
+                        "We are finally together! 🥰";
+                    document.getElementById("dynamic-message").style.color =
+                        "#ff4757";
+                    document.getElementById("dynamic-message").style.fontSize =
+                        "2rem";
+                    document.getElementById(
+                        "dynamic-message",
+                    ).style.fontWeight = "600";
+                    return;
+                }
+
+                // Calcolo del tempo rimanente
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor(
+                    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+                );
+                const minutes = Math.floor(
+                    (difference % (1000 * 60 * 60)) / (1000 * 60),
+                );
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                // Aggiornamento dei numeri sullo schermo
+                document.getElementById("days").innerText = days
+                    .toString()
+                    .padStart(2, "0");
+                document.getElementById("hours").innerText = hours
+                    .toString()
+                    .padStart(2, "0");
+                document.getElementById("minutes").innerText = minutes
+                    .toString()
+                    .padStart(2, "0");
+                document.getElementById("seconds").innerText = seconds
+                    .toString()
+                    .padStart(2, "0");
+            }, 1000);
+        </script>
+    </body>
+</html>
