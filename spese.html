@@ -1731,12 +1731,13 @@
                     (e) => e.category === "extra",
                 );
 
-                const totalFood = sum(foodItems);
+                const totalFood = sum(foodItems); // include anche oggi (speso reale)
                 const totalFixed = sum(fixedItems);
                 const totalExtra = sum(extraItems);
 
                 const MS_DAY = 86_400_000;
                 const today = midnightLocal(new Date());
+                const todayStr = localToday();
                 const endDay = midnightLocal(new Date(endDate + "T12:00:00"));
 
                 const remainingDays = Math.max(
@@ -1744,7 +1745,7 @@
                     Math.round((endDay - today) / MS_DAY),
                 );
 
-                // Timeline: resta basata dalla prima spesa in assoluto
+                // Timeline invariata: prima spesa in assoluto
                 let firstDate = null;
                 if (expenses.length > 0) {
                     const allDates = expenses.map(
@@ -1754,16 +1755,22 @@
                     midnightLocal(firstDate);
                 }
 
-                // ✅ NUOVO: media food basata sui GIORNI UNICI DEL CAMPO DATE
-                const uniqueFoodDays = new Set(foodItems.map((e) => e.date))
-                    .size;
+                // ✅ Nuova logica previsiva:
+                // media solo fino a ieri (date < oggi)
+                const historicalFoodItems = foodItems.filter(
+                    (e) => e.date < todayStr,
+                );
+                const totalHistoricalFood = sum(historicalFoodItems);
+                const historicalFoodDays = new Set(
+                    historicalFoodItems.map((e) => e.date),
+                ).size;
 
                 let realDailyAvg = 0;
                 let prudentialAvg = 0;
                 let foodProjection = 0;
 
-                if (totalFood > 0 && uniqueFoodDays > 0) {
-                    realDailyAvg = totalFood / uniqueFoodDays;
+                if (totalHistoricalFood > 0 && historicalFoodDays > 0) {
+                    realDailyAvg = totalHistoricalFood / historicalFoodDays;
                     prudentialAvg = realDailyAvg * (1 + safetyMargin / 100);
                     foodProjection = prudentialAvg * remainingDays;
                 }
@@ -1772,17 +1779,17 @@
                     totalBudget -
                     totalFixed -
                     totalExtra -
-                    totalFood -
-                    foodProjection;
+                    totalFood - // già speso (incluso oggi)
+                    foodProjection; // previsione futura basata su storico fino a ieri
 
                 const subtitle = (() => {
                     if (expenses.length === 0)
                         return "Add your first expense to enable projections";
                     if (remainingDays === 0)
                         return `Erasmus ended! Final surplus: €${safeMargin.toFixed(2)}`;
-                    if (foodItems.length === 0)
-                        return `${remainingDays} days left · Add food expenses to enable daily projection`;
-                    return `${remainingDays} days left · Proj. food cost: €${foodProjection.toFixed(0)}`;
+                    if (historicalFoodDays === 0)
+                        return `${remainingDays} days left · Need at least 1 completed day (before today) for food projection`;
+                    return `${remainingDays} days left · Proj. food cost: €${foodProjection.toFixed(0)} (avg up to yesterday)`;
                 })();
                 setHeroDisplay(safeMargin, subtitle);
 
@@ -1793,9 +1800,13 @@
                 document.getElementById("statDaysLeft").textContent =
                     remainingDays;
                 document.getElementById("statDailyAvg").textContent =
-                    foodItems.length > 0 ? `€${realDailyAvg.toFixed(1)}` : "—";
+                    historicalFoodDays > 0
+                        ? `€${realDailyAvg.toFixed(1)}`
+                        : "—";
                 document.getElementById("statPrudential").textContent =
-                    foodItems.length > 0 ? `€${prudentialAvg.toFixed(1)}` : "—";
+                    historicalFoodDays > 0
+                        ? `€${prudentialAvg.toFixed(1)}`
+                        : "—";
 
                 const pFixed = pct(totalFixed, totalBudget);
                 const pExtra = pct(totalExtra, totalBudget);
