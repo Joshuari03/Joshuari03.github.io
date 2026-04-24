@@ -118,7 +118,6 @@
                 overflow: hidden;
             }
 
-            /* Decorative circles */
             .app-header::before {
                 content: "";
                 position: absolute;
@@ -153,8 +152,6 @@
                 align-items: flex-start;
             }
 
-            .header-brand {
-            }
             .app-title {
                 font-size: 1.45rem;
                 font-weight: 700;
@@ -190,9 +187,6 @@
                 color: #ffffff;
             }
 
-            /* ============================================================
-       6. HERO — SAFE MARGIN SECTION
-    ============================================================ */
             .hero-section {
                 background: var(--navy);
                 padding: 4px 20px 30px;
@@ -259,7 +253,6 @@
                 transition: opacity 0.3s;
             }
 
-            /* Mini stats row inside hero */
             .hero-stats {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -290,7 +283,6 @@
                 margin-top: 3px;
             }
 
-            /* Seamless curve connecting hero to content */
             .hero-curve {
                 background: var(--navy);
                 margin-bottom: -2px;
@@ -300,9 +292,6 @@
                 width: 100%;
             }
 
-            /* ============================================================
-       7. CARDS
-    ============================================================ */
             .card {
                 background: var(--card);
                 border-radius: var(--radius);
@@ -332,9 +321,6 @@
                 padding: 18px;
             }
 
-            /* ============================================================
-       8. BREAKDOWN CARD
-    ============================================================ */
             .breakdown-bar-track {
                 height: 10px;
                 border-radius: 5px;
@@ -394,7 +380,6 @@
                 color: var(--text);
             }
 
-            /* Days timeline */
             .timeline-wrap {
                 margin-top: 16px;
                 padding-top: 16px;
@@ -448,9 +433,6 @@
                 color: var(--text-muted);
             }
 
-            /* ============================================================
-       9. SETTINGS PANEL
-    ============================================================ */
             .settings-toggle-row {
                 display: flex;
                 justify-content: space-between;
@@ -496,9 +478,6 @@
                 border-top: 1px solid var(--border);
             }
 
-            /* ============================================================
-       10. FORM ELEMENTS
-    ============================================================ */
             .form-group {
                 margin-bottom: 13px;
             }
@@ -578,9 +557,6 @@
                 padding-left: 28px;
             }
 
-            /* ============================================================
-       11. BUTTONS
-    ============================================================ */
             .btn {
                 display: inline-flex;
                 align-items: center;
@@ -649,9 +625,6 @@
                 border-radius: var(--radius-xs);
             }
 
-            /* ============================================================
-       12. EXPENSE LIST
-    ============================================================ */
             .expense-list {
                 display: flex;
                 flex-direction: column;
@@ -685,7 +658,6 @@
                 background: var(--bg);
             }
 
-            /* Category icon tile */
             .exp-icon {
                 width: 38px;
                 height: 38px;
@@ -797,9 +769,6 @@
                 color: var(--text-muted);
             }
 
-            /* ============================================================
-       13. ALERTS & CONFIG WARNING
-    ============================================================ */
             .config-banner {
                 background: var(--warn-bg);
                 border: 1px solid rgba(232, 200, 74, 0.4);
@@ -837,9 +806,6 @@
                 font-size: 0.78rem;
             }
 
-            /* ============================================================
-       14. MODALS
-    ============================================================ */
             .modal-backdrop {
                 position: fixed;
                 inset: 0;
@@ -967,9 +933,6 @@
                 margin-top: 16px;
             }
 
-            /* ============================================================
-       15. TOAST NOTIFICATION
-    ============================================================ */
             .toast {
                 position: fixed;
                 bottom: 28px;
@@ -1000,9 +963,6 @@
                 opacity: 1;
             }
 
-            /* ============================================================
-       16. LOADING SCREEN
-    ============================================================ */
             #loadingScreen {
                 position: fixed;
                 inset: 0;
@@ -1044,9 +1004,6 @@
                 color: var(--text-muted);
             }
 
-            /* ============================================================
-       17. UTILITIES
-    ============================================================ */
             .mt-1 {
                 margin-top: 6px;
             }
@@ -1069,24 +1026,17 @@
                 font-weight: 600;
             }
 
-            /* Section spacing at top of content area */
             .content-top {
                 padding-top: 18px;
             }
         </style>
     </head>
     <body>
-        <!-- ============================================================
-     LOADING SCREEN
-============================================================ -->
         <div id="loadingScreen">
             <div class="spinner"></div>
             <p class="loading-text">Loading your budget…</p>
         </div>
 
-        <!-- ============================================================
-     MODAL: SESSION SETUP (shown on first visit)
-============================================================ -->
         <div class="modal-backdrop" id="modalSession">
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
@@ -1125,9 +1075,6 @@
             </div>
         </div>
 
-        <!-- ============================================================
-     MODAL: SESSION INFO (key + options)
-============================================================ -->
         <div class="modal-backdrop" id="modalSessionInfo">
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
@@ -1167,9 +1114,6 @@
             </div>
         </div>
 
-        <!-- ============================================================
-     HEADER
-============================================================ -->
         <header class="app-header">
             <div class="header-inner">
                 <div class="header-brand">
@@ -1185,9 +1129,6 @@
             </div>
         </header>
 
-        <!-- ============================================================
-     HERO — SAFE MARGIN
-============================================================ -->
         <div class="hero-section">
             <div class="hero-inner">
                 <p class="hero-label">Safe Margin for Extras</p>
@@ -1199,7 +1140,6 @@
                     Configure your budget settings below to begin
                 </p>
 
-                <!-- Mini stats (hidden until data exists) -->
                 <div class="hero-stats hidden" id="heroStats">
                     <div class="hero-stat">
                         <div class="hero-stat-val" id="statDaysLeft">—</div>
@@ -1217,7 +1157,6 @@
             </div>
         </div>
 
-        <!-- Curve transition hero → content -->
         <div class="hero-curve">
             <svg
                 viewBox="0 0 480 24"
@@ -1230,11 +1169,7 @@
             </svg>
         </div>
 
-        <!-- ============================================================
-     MAIN CONTENT
-============================================================ -->
         <div class="app-container content-top">
-            <!-- Firebase config warning (shown if not configured) -->
             <div class="firebase-warning" id="firebaseWarning">
                 ⚠️ <strong>Firebase not configured.</strong> Replace the
                 placeholder values in the <code>&lt;script&gt;</code> section
@@ -1242,14 +1177,12 @@
                 code for step-by-step instructions.
             </div>
 
-            <!-- Config banner (shown if settings are incomplete) -->
             <div class="config-banner" id="configBanner">
                 ⚙️ Set your <strong>Total Budget</strong>,
                 <strong>End Date</strong>, and <strong>Safety Margin</strong> to
                 enable spending projections.
             </div>
 
-            <!-- ── BREAKDOWN CARD (hidden until configured) ────────────── -->
             <div class="card hidden" id="breakdownCard">
                 <div class="card-header">
                     <span class="card-title">📊 Budget Breakdown</span>
@@ -1258,7 +1191,6 @@
                     >
                 </div>
                 <div class="card-body">
-                    <!-- Stacked bar -->
                     <div class="breakdown-bar-track">
                         <div
                             class="bar-seg seg-fixed"
@@ -1282,7 +1214,6 @@
                         ></div>
                     </div>
 
-                    <!-- Legend -->
                     <div class="legend-grid">
                         <div class="legend-row">
                             <div
@@ -1318,7 +1249,6 @@
                         </div>
                     </div>
 
-                    <!-- Timeline bar -->
                     <div class="timeline-wrap hidden" id="timelineWrap">
                         <div class="timeline-header">
                             <span class="timeline-title">⏳ Time Elapsed</span>
@@ -1341,7 +1271,6 @@
                 </div>
             </div>
 
-            <!-- ── SETTINGS CARD ──────────────────────────────────────── -->
             <div class="card">
                 <div
                     class="card-header settings-toggle-row"
@@ -1401,7 +1330,6 @@
                 </div>
             </div>
 
-            <!-- ── ADD EXPENSE CARD ───────────────────────────────────── -->
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">➕ Add Expense</span>
@@ -1459,7 +1387,6 @@
                 </div>
             </div>
 
-            <!-- ── HISTORY CARD ──────────────────────────────────────── -->
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">📋 Expense History</span>
@@ -1477,43 +1404,10 @@
                 </div>
             </div>
         </div>
-        <!-- /app-container -->
 
-        <!-- Toast notification -->
         <div class="toast" id="toast"></div>
 
-        <!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
         <script>
-            /* ============================================================
-     ⚙️  FIREBASE CONFIGURATION
-     ------------------------------------------------------------
-     HOW TO GET YOUR CREDENTIALS (5 minutes):
-     1. Go to https://console.firebase.google.com
-     2. Click "Add project" → give it a name → Continue
-     3. Disable Google Analytics (optional) → Create project
-     4. Click the "</>" (Web) icon to register a web app
-     5. Give the app a nickname → Register app
-     6. COPY the firebaseConfig object shown and paste it below
-     7. Click "Continue to console"
-     8. In the left menu: Build → Firestore Database
-     9. Click "Create database" → Start in TEST MODE → Next →
-        choose your region → Enable
-    10. In Firestore, go to Rules tab and paste:
-
-        rules_version = '2';
-        service cloud.firestore {
-          match /databases/{database}/documents {
-            match /sessions/{sessionId}/{document=**} {
-              allow read, write: if true;
-            }
-          }
-        }
-
-        Click "Publish". (Later you can add proper auth rules.)
-    11. Replace the placeholder values below with your real ones.
-  ============================================================ */
             const FIREBASE_CONFIG = {
                 apiKey: "AIzaSyDyOg9tlsayTsKL_LhNbqxcI6Tj6cvmegE",
                 authDomain: "erasmustracker.firebaseapp.com",
@@ -1523,15 +1417,11 @@
                 appId: "1:691515635532:web:ff5aaeeb15fa81d634c1e9",
             };
 
-            /* ============================================================
-     🔥 FIREBASE INITIALISATION
-  ============================================================ */
             let db = null;
             let firebaseReady = false;
 
             function initFirebase() {
                 if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY") {
-                    // Show the unconfigured warning
                     document
                         .getElementById("firebaseWarning")
                         .classList.add("show");
@@ -1551,19 +1441,11 @@
                 }
             }
 
-            /* ============================================================
-     🗂️  APP STATE
-  ============================================================ */
-            let sessionKey = null; // UUID that identifies this user's data
-            let settings = {}; // { totalBudget, endDate, safetyMargin }
-            let expenses = []; // Live array from Firestore
-            let unsubExpenses = null; // Firestore real-time unsubscribe fn
+            let sessionKey = null;
+            let settings = {};
+            let expenses = [];
+            let unsubExpenses = null;
 
-            /* ============================================================
-     🔑 SESSION MANAGEMENT
-  ============================================================ */
-
-            /** Cryptographically-style UUID v4 generator */
             function uuid() {
                 return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
                     /[xy]/g,
@@ -1575,7 +1457,6 @@
                 );
             }
 
-            /** Boot: check localStorage for a saved session or show setup modal */
             function bootApp() {
                 const stored = localStorage.getItem("eb_session");
                 if (stored) {
@@ -1592,7 +1473,6 @@
                 }
             }
 
-            /** Create a brand-new session */
             function createNewSession() {
                 if (!firebaseReady) {
                     showToast(
@@ -1606,14 +1486,12 @@
                     sessionKey;
                 closeModal("modalSession");
                 attachListeners();
-                // Auto-open settings for first-time users
                 setTimeout(openSettings, 400);
                 showToast(
                     "🎉 Tracker created! Configure your budget to start.",
                 );
             }
 
-            /** Restore an existing session from a user-provided key */
             function restoreSession() {
                 if (!firebaseReady) {
                     showToast(
@@ -1637,7 +1515,6 @@
                 showToast("✅ Session restored!");
             }
 
-            /** Copy key to clipboard */
             async function copySessionKey() {
                 try {
                     await navigator.clipboard.writeText(sessionKey);
@@ -1647,7 +1524,6 @@
                 }
             }
 
-            /** Forget current session (data stays in cloud) */
             function switchSession() {
                 if (
                     !confirm(
@@ -1670,10 +1546,6 @@
                 openModal("modalSession");
             }
 
-            /* ============================================================
-     🔗 FIRESTORE REAL-TIME LISTENERS
-  ============================================================ */
-
             function sessionRef() {
                 return db.collection("sessions").doc(sessionKey);
             }
@@ -1681,7 +1553,6 @@
             function attachListeners() {
                 if (!db || !sessionKey) return;
 
-                // ── Settings document ──────────────────────────────────────
                 sessionRef()
                     .collection("config")
                     .doc("settings")
@@ -1694,7 +1565,6 @@
                         (err) => console.error("[Settings]", err),
                     );
 
-                // ── Expenses collection (ordered newest-first for display) ──
                 if (unsubExpenses) unsubExpenses();
                 unsubExpenses = sessionRef()
                     .collection("expenses")
@@ -1712,11 +1582,6 @@
                     );
             }
 
-            /* ============================================================
-     ⚙️  SETTINGS CRUD
-  ============================================================ */
-
-            /** Populate the settings form inputs with saved values */
             function populateSettingsForm() {
                 if (settings.totalBudget !== undefined)
                     document.getElementById("fldBudget").value =
@@ -1729,7 +1594,6 @@
                         settings.safetyMargin;
             }
 
-            /** Persist settings to Firestore */
             async function saveSettings() {
                 if (!firebaseReady || !sessionKey) {
                     showToast("⚠️ Session not active.");
@@ -1773,16 +1637,10 @@
                 }
             }
 
-            /* ============================================================
-     💸 EXPENSE CRUD
-  ============================================================ */
-
-            /** Set today's date as the default for the expense date field */
             function setTodayDefault() {
                 document.getElementById("fldDate").value = localToday();
             }
 
-            /** Add a new expense to Firestore */
             async function addExpense() {
                 if (!firebaseReady || !sessionKey) {
                     showToast("⚠️ Session not active.");
@@ -1820,7 +1678,6 @@
                             createdAt: new Date().toISOString(),
                         });
 
-                    // Reset form
                     document.getElementById("fldAmount").value = "";
                     document.getElementById("fldDesc").value = "";
                     setTodayDefault();
@@ -1833,7 +1690,6 @@
                 }
             }
 
-            /** Delete an expense document from Firestore */
             async function deleteExpense(id) {
                 if (!confirm("Delete this expense?")) return;
                 try {
@@ -1844,18 +1700,9 @@
                 }
             }
 
-            /* ============================================================
-     🧮 PREDICTIVE ALGORITHM
-     ------------------------------------------------------------
-     Calculates the "Safe Margin for Extras" — how much money
-     the user can still freely spend without running out before
-     the Erasmus end date, accounting for projected food costs.
-  ============================================================ */
-
             function recalculate() {
                 const { totalBudget, endDate, safetyMargin } = settings;
 
-                // Guard: all three settings must be present and valid
                 const configured =
                     totalBudget > 0 && endDate && safetyMargin >= 0;
                 document
@@ -1876,10 +1723,6 @@
                     return;
                 }
 
-                /* ── STEP 1: Partition expenses by category ─────────────────
-       Fixed and Extra are one-time costs subtracted directly.
-       Food/Variable is used to compute a daily spending rate.
-    ───────────────────────────────────────────────────────────── */
                 const foodItems = expenses.filter((e) => e.category === "food");
                 const fixedItems = expenses.filter(
                     (e) => e.category === "fixed",
@@ -1892,69 +1735,39 @@
                 const totalFixed = sum(fixedItems);
                 const totalExtra = sum(extraItems);
 
-                /* ── STEP 2: Time calculations ──────────────────────────────
-       daysElapsed: from the date of the FIRST entered expense
-                    (any category) up to today.
-       remainingDays: from today to the Erasmus end date.
-    ───────────────────────────────────────────────────────────── */
                 const MS_DAY = 86_400_000;
                 const today = midnightLocal(new Date());
                 const endDay = midnightLocal(new Date(endDate + "T12:00:00"));
 
-                // Remaining days (clamped to 0 if end date has passed)
                 const remainingDays = Math.max(
                     0,
                     Math.round((endDay - today) / MS_DAY),
                 );
 
-                // Find the earliest expense date across ALL categories
-                let daysElapsed = 0;
+                // Timeline: resta basata dalla prima spesa in assoluto
                 let firstDate = null;
-
                 if (expenses.length > 0) {
                     const allDates = expenses.map(
                         (e) => new Date(e.date + "T12:00:00"),
                     );
                     firstDate = new Date(Math.min(...allDates));
                     midnightLocal(firstDate);
-
-                    // Minimum 1 day to avoid division by zero on the day of first entry
-                    daysElapsed = Math.max(
-                        1,
-                        Math.round((today - firstDate) / MS_DAY),
-                    );
                 }
 
-                /* ── STEP 3: Real daily average & prudential projection ─────
-       realDailyAvg  = total food spent ÷ days elapsed
-       prudentialAvg = realDailyAvg × (1 + safetyMargin / 100)
-                       Example: avg €10, margin 20% → €12
-       projection    = prudentialAvg × remaining days
-    ───────────────────────────────────────────────────────────── */
+                // ✅ NUOVO: media food basata sui GIORNI UNICI DEL CAMPO DATE
+                const uniqueFoodDays = new Set(foodItems.map((e) => e.date))
+                    .size;
+
                 let realDailyAvg = 0;
                 let prudentialAvg = 0;
                 let foodProjection = 0;
 
-                if (foodItems.length > 0 && daysElapsed > 0) {
-                    // Real average daily food expenditure based on observed data
-                    realDailyAvg = totalFood / daysElapsed;
-
-                    // Inflate by safety margin to create a prudential (pessimistic) estimate
+                if (totalFood > 0 && uniqueFoodDays > 0) {
+                    realDailyAvg = totalFood / uniqueFoodDays;
                     prudentialAvg = realDailyAvg * (1 + safetyMargin / 100);
-
-                    // Project this prudential rate across the remaining days
                     foodProjection = prudentialAvg * remainingDays;
                 }
 
-                /* ── STEP 4: Safe Margin ────────────────────────────────────
-       Safe Margin = Total Budget
-                   − Fixed Expenses (one-time, already paid)
-                   − Extra Expenses (one-time, already paid)
-                   − Food Already Spent
-                   − Projected Future Food Cost
-       A positive result means freely-spendable money.
-       A negative result means the user is projected to overspend.
-    ───────────────────────────────────────────────────────────── */
                 const safeMargin =
                     totalBudget -
                     totalFixed -
@@ -1962,9 +1775,6 @@
                     totalFood -
                     foodProjection;
 
-                /* ── STEP 5: Update all UI elements ─────────────────────── */
-
-                // Hero display
                 const subtitle = (() => {
                     if (expenses.length === 0)
                         return "Add your first expense to enable projections";
@@ -1976,7 +1786,6 @@
                 })();
                 setHeroDisplay(safeMargin, subtitle);
 
-                // Mini stats row
                 const hasStats = expenses.length > 0;
                 document
                     .getElementById("heroStats")
@@ -1988,7 +1797,6 @@
                 document.getElementById("statPrudential").textContent =
                     foodItems.length > 0 ? `€${prudentialAvg.toFixed(1)}` : "—";
 
-                // Breakdown stacked bar (each segment as % of total budget)
                 const pFixed = pct(totalFixed, totalBudget);
                 const pExtra = pct(totalExtra, totalBudget);
                 const pFood = pct(totalFood, totalBudget);
@@ -2016,7 +1824,6 @@
                 document.getElementById("totalBudgetLabel").textContent =
                     fmt(totalBudget) + " total";
 
-                // Timeline progress bar (only when we have a first expense)
                 if (firstDate && endDay) {
                     const totalSpan = Math.max(
                         1,
@@ -2049,7 +1856,6 @@
                 }
             }
 
-            /** Update hero section display */
             function setHeroDisplay(value, subtitle) {
                 const el = document.getElementById("heroAmount");
                 const cs = document.getElementById("heroCurrencySign");
@@ -2073,10 +1879,6 @@
 
                 document.getElementById("heroSubtitle").textContent = subtitle;
             }
-
-            /* ============================================================
-     📋 EXPENSE LIST RENDERING
-  ============================================================ */
 
             const CAT = {
                 food: {
@@ -2138,18 +1940,11 @@
                     .join("");
             }
 
-            /* ============================================================
-     🛠️  PURE HELPERS
-  ============================================================ */
-
-            /** Sum the amount fields of an array of expense objects */
             const sum = (arr) => arr.reduce((s, e) => s + (e.amount || 0), 0);
 
-            /** Safe percentage: (part / total) * 100, guarded against 0 total */
             const pct = (part, total) =>
                 total > 0 ? Math.min(100, (part / total) * 100) : 0;
 
-            /** Format a number as a Euro string: €1,234.56 */
             const fmt = (n) =>
                 "€" +
                 (n || 0).toLocaleString("en-IE", {
@@ -2157,19 +1952,16 @@
                     maximumFractionDigits: 0,
                 });
 
-            /** Set a Date to local midnight (mutates and returns it) */
             function midnightLocal(d) {
                 d.setHours(0, 0, 0, 0);
                 return d;
             }
 
-            /** Today's date in YYYY-MM-DD (local time, avoids UTC offset bug) */
             function localToday() {
                 const d = new Date();
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
             }
 
-            /** Format a Date object to "14 Jun 2025" */
             function fmtDate(d) {
                 return d.toLocaleDateString("en-GB", {
                     day: "2-digit",
@@ -2178,12 +1970,10 @@
                 });
             }
 
-            /** Format a YYYY-MM-DD string to "14 Jun 2025" (noon trick avoids TZ issues) */
             function fmtDateStr(str) {
                 return fmtDate(new Date(str + "T12:00:00"));
             }
 
-            /** Sanitise a string for innerHTML insertion */
             function esc(s) {
                 return s
                     .replace(/&/g, "&amp;")
@@ -2192,10 +1982,6 @@
                     .replace(/"/g, "&quot;");
             }
 
-            /* ============================================================
-     🎛️  UI HELPERS
-  ============================================================ */
-
             function openModal(id) {
                 document.getElementById(id).classList.add("active");
             }
@@ -2203,7 +1989,6 @@
                 document.getElementById(id).classList.remove("active");
             }
 
-            // Close modal when clicking the backdrop (but not for the required session modal)
             document.querySelectorAll(".modal-backdrop").forEach((el) => {
                 el.addEventListener("click", (e) => {
                     if (e.target === el && el.id !== "modalSession")
@@ -2256,16 +2041,13 @@
                 }, 900);
             }
 
-            /* ============================================================
-     🚀 BOOT SEQUENCE
-  ============================================================ */
-            setTodayDefault(); // Set expense date input to today
-            const ok = initFirebase(); // Try to connect Firebase
+            setTodayDefault();
+            const ok = initFirebase();
             if (ok) {
-                bootApp(); // Check session & attach listeners
+                bootApp();
             } else {
                 hideLoading();
-                openModal("modalSession"); // Still show the modal (key management)
+                openModal("modalSession");
             }
         </script>
     </body>
