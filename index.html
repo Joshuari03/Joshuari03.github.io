@@ -108,7 +108,6 @@
                 font-weight: 600;
             }
 
-            /* Header + nav */
             .site-header {
                 position: sticky;
                 top: 0;
@@ -210,6 +209,59 @@
                 font-size: 1rem;
             }
 
+            /* EXTRA MENU (easter egg style) */
+            .extra-menu {
+                position: relative;
+            }
+            .btn-extra {
+                font-size: 0.76rem;
+                padding: 0.45rem 0.62rem;
+                color: color-mix(in oklab, var(--muted) 80%, var(--text));
+                border-color: color-mix(
+                    in oklab,
+                    var(--border) 75%,
+                    transparent
+                );
+                opacity: 0.78;
+            }
+            .btn-extra:hover {
+                opacity: 1;
+                color: var(--text);
+            }
+            .extra-dropdown {
+                position: absolute;
+                top: calc(100% + 8px);
+                right: 0;
+                min-width: 170px;
+                padding: 0.4rem;
+                border-radius: 12px;
+                border: 1px solid var(--border);
+                background: color-mix(
+                    in oklab,
+                    var(--bg-soft) 94%,
+                    transparent
+                );
+                box-shadow: var(--shadow);
+                list-style: none;
+                display: none;
+                z-index: 120;
+            }
+            .extra-dropdown.open {
+                display: grid;
+                gap: 0.25rem;
+            }
+            .extra-dropdown a {
+                display: block;
+                text-decoration: none;
+                color: var(--text);
+                padding: 0.52rem 0.62rem;
+                border-radius: 8px;
+                font-size: 0.88rem;
+            }
+            .extra-dropdown a:hover {
+                background: color-mix(in oklab, var(--text) 8%, transparent);
+            }
+
             .hamburger {
                 display: none;
                 flex-direction: column;
@@ -265,7 +317,6 @@
                 background: color-mix(in oklab, var(--card) 90%, transparent);
             }
 
-            /* Hero */
             .hero {
                 padding: 74px 0 52px;
             }
@@ -325,7 +376,6 @@
                 font-size: 0.92rem;
             }
 
-            /* cards/grid */
             .grid {
                 display: grid;
                 gap: 0.9rem;
@@ -365,7 +415,6 @@
                 color: var(--text);
             }
 
-            /* Project controls */
             .controls {
                 display: grid;
                 gap: 0.7rem;
@@ -457,7 +506,6 @@
                 margin-top: 0.8rem;
             }
 
-            /* Timeline */
             .timeline {
                 margin-top: 0.9rem;
                 border-left: 2px solid
@@ -481,15 +529,15 @@
             .timeline-item .detail {
                 color: var(--muted);
                 margin-top: 0.42rem;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
+                max-height: none;
+                overflow: visible;
             }
-            .timeline-item.open .detail {
+
+            .timeline-item:hover .detail,
+            .timeline-item:focus-within .detail {
                 max-height: 130px;
             }
 
-            /* Contact */
             form {
                 margin-top: 0.9rem;
                 display: grid;
@@ -569,7 +617,6 @@
                 display: none !important;
             }
 
-            /* GitHub + skeleton */
             .repo-list {
                 list-style: none;
                 display: grid;
@@ -621,7 +668,6 @@
                 }
             }
 
-            /* Modal */
             .modal {
                 position: fixed;
                 inset: 0;
@@ -760,7 +806,6 @@
                 text-decoration: none;
             }
 
-            /* reveal */
             .reveal {
                 opacity: 0;
                 transform: translateY(18px);
@@ -773,7 +818,6 @@
                 transform: translateY(0);
             }
 
-            /* Footer */
             footer {
                 border-top: 1px solid var(--border);
                 color: var(--muted);
@@ -781,7 +825,6 @@
                 padding: 20px 0 40px;
             }
 
-            /* Utilities */
             .muted {
                 color: var(--muted);
             }
@@ -789,7 +832,6 @@
                 margin-top: 0.8rem;
             }
 
-            /* Responsive */
             @media (max-width: 1020px) {
                 .hero-grid,
                 .grid-3,
@@ -837,9 +879,27 @@
                     >
                         🌙
                     </button>
+
                     <a class="btn btn-primary desktop-only" href="#contact"
                         >Let’s Connect</a
                     >
+
+                    <div class="extra-menu desktop-only">
+                        <button
+                            id="extraToggle"
+                            class="btn btn-extra"
+                            aria-label="Open extra links"
+                            aria-expanded="false"
+                            aria-controls="extraDropdown"
+                        >
+                            extra
+                        </button>
+                        <ul id="extraDropdown" class="extra-dropdown">
+                            <li><a href="flashcards.html">Flashcards</a></li>
+                            <li><a href="spese.html">Spese</a></li>
+                        </ul>
+                    </div>
+
                     <button
                         id="hamburgerBtn"
                         class="hamburger"
@@ -862,6 +922,14 @@
                     <li><a href="#timeline" data-mobile-link>Timeline</a></li>
                     <li><a href="#cv" data-mobile-link>CV</a></li>
                     <li><a href="#contact" data-mobile-link>Contact</a></li>
+                    <li>
+                        <a href="flashcards.html" data-mobile-link
+                            >Extra · Flashcards</a
+                        >
+                    </li>
+                    <li>
+                        <a href="spese.html" data-mobile-link>Extra · Spese</a>
+                    </li>
                 </ul>
             </nav>
         </header>
@@ -874,15 +942,16 @@
                 <div class="hero-grid">
                     <div class="reveal">
                         <h1>
-                            Building smarter, cleaner, and more resilient
-                            electrical systems.
+                            Making my creativity available to the electrical
+                            engineering world.
                         </h1>
                         <p>
-                            I’m a graduate student in Electrical Engineering
-                            focused on power systems, embedded control, and
-                            energy innovation. This portfolio combines my
-                            academic projects, practical prototypes, and
-                            engineering workflow.
+                            I'm Joshua Rizzello, a technology enthusiast focused
+                            on electricity-related technologies and their
+                            efficiency. I would define myself as "curious by
+                            nature", because I've always loved learning how
+                            things work and be updated about the latest
+                            technologies.
                         </p>
                         <div class="hero-cta">
                             <a class="btn btn-primary" href="#projects"
@@ -925,18 +994,18 @@
                     <h2 class="section-title reveal">Who I Am</h2>
                     <p class="section-sub reveal">
                         I am currently pursuing a Master’s degree in Electrical
-                        Engineering with a strong interest in smart grids, power
-                        electronics, model-based control, and digital energy
-                        infrastructure.
+                        Engineering with a strong interest in smart grids,
+                        optimization, motors design and their control.
                     </p>
 
                     <div class="grid grid-3">
                         <article class="card reveal">
                             <h3>Research Interests</h3>
                             <p>
-                                Power systems optimization, converter design,
-                                grid stability, embedded control for energy
-                                devices.
+                                Power electronics and motor drives, energy
+                                systems integration, control of electrified
+                                systems, and practical applications in smart and
+                                sustainable energy technologies.
                             </p>
                         </article>
                         <article class="card reveal">
@@ -950,9 +1019,10 @@
                         <article class="card reveal">
                             <h3>Career Direction</h3>
                             <p>
-                                R&D roles in electrification, smart energy,
-                                sustainable infrastructure, and advanced
-                                automation.
+                                Engineering, technical sales, and R&D roles in
+                                electrification, motor drives, and power
+                                systems—exploring high-impact opportunities in
+                                China.
                             </p>
                         </article>
                     </div>
@@ -996,9 +1066,7 @@
                         </div>
                     </div>
 
-                    <div id="projectsGrid" class="grid grid-3 space-top">
-                        <!-- Cards generated by JS -->
-                    </div>
+                    <div id="projectsGrid" class="grid grid-3 space-top"></div>
 
                     <div id="projectsEmpty" class="empty-state">
                         No matching projects found. Try a different keyword or
@@ -1010,37 +1078,57 @@
             <section id="timeline" class="section">
                 <div class="container">
                     <span class="badge reveal">Education & Experience</span>
-                    <h2 class="section-title reveal">Interactive Timeline</h2>
-                    <p class="section-sub reveal">
-                        Click each item to expand details.
-                    </p>
+                    <h2 class="section-title reveal">Timeline</h2>
 
                     <div id="timelineList" class="timeline reveal">
                         <article class="timeline-item">
-                            <div class="meta">2023 — Present</div>
-                            <h3>M.Sc. in Electrical Engineering</h3>
+                            <div class="meta">2026 — Present</div>
+                            <h3>
+                                Exchange student - Xi'an Jiaotong University
+                            </h3>
                             <div class="detail">
-                                Focus on advanced power systems, converter
-                                design, optimal control, and research
-                                methodology.
+                                Focus on advanced power systems, load
+                                prediction, optimal motor design and control.
                             </div>
                         </article>
                         <article class="timeline-item">
-                            <div class="meta">2022 — 2023</div>
-                            <h3>Research Internship (Energy Systems Lab)</h3>
+                            <div class="meta">2025 — Present</div>
+                            <h3>
+                                M.Sc. in Electrical Engineering - Politecnico di
+                                Milano
+                            </h3>
                             <div class="detail">
-                                Developed simulation models for renewable
-                                integration and performed sensitivity analyses
-                                on load scenarios.
+                                Focus on advanced power systems, load
+                                prediction, optimal motor design and control.
                             </div>
                         </article>
                         <article class="timeline-item">
-                            <div class="meta">2020 — 2023</div>
-                            <h3>B.Sc. in Electrical Engineering</h3>
+                            <div class="meta">2024 — 2025</div>
+                            <h3>Drone project team member (AEA Polimi)</h3>
+                            <div class="detail">
+                                Devolped the motors control logic for the
+                                quadcopter "Falco" project .
+                            </div>
+                        </article>
+                        <article class="timeline-item">
+                            <div class="meta">2023 — 2024</div>
+                            <h3>Formula student team member (Dynamis PRC)</h3>
+                            <div class="detail">
+                                Devolped inverter thermal model in simulink,
+                                improved motors efficieny LUT based on car's
+                                logged data.
+                            </div>
+                        </article>
+                        <article class="timeline-item">
+                            <div class="meta">2022 — 2025</div>
+                            <h3>
+                                B.Sc. in Electrical Engineering - Politecnico di
+                                Milano
+                            </h3>
                             <div class="detail">
                                 Built a strong foundation in circuit theory,
-                                electronics, control systems, and numerical
-                                methods.
+                                electrical machines, control systems, and
+                                numerical methods.
                             </div>
                         </article>
                     </div>
@@ -1070,6 +1158,14 @@
                                     href="YOUR_CV_FILE_URL.pdf"
                                     download
                                     >Download CV (PDF)</a
+                                >
+                                <a
+                                    class="btn"
+                                    href="www.linkedin.com/in/joshua-rizzello-bb5857234"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style="margin-left: 0.5rem"
+                                    >LinkedIn Profile</a
                                 >
                                 <p class="muted space-top">
                                     Total downloads (local tracking):
@@ -1161,7 +1257,6 @@
                                 <small></small>
                             </div>
 
-                            <!-- Honeypot anti-spam -->
                             <div class="field honeypot">
                                 <label for="company">Company</label>
                                 <input
@@ -1202,7 +1297,6 @@
             </div>
         </footer>
 
-        <!-- Project Modal -->
         <div
             id="projectModal"
             class="modal"
@@ -1267,153 +1361,135 @@
             (() => {
                 "use strict";
 
-                /* =========================
-                 * CONFIG
-                 * ========================= */
-                const GITHUB_USERNAME = "Joshuari03"; // <-- Replace
+                const GITHUB_USERNAME = "Joshuari03";
                 const FORMSPREE_ENDPOINT =
-                    "https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT"; // <-- Replace
-                const START_YEAR = 2020;
-                const MAX_REPOS = 4;
+                    "https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT";
+                const START_YEAR = 2022;
+                const MAX_REPOS = 3;
 
                 const projectData = [
                     {
-                        id: "microgrid",
-                        title: "Smart Microgrid Simulation",
+                        id: "project-1",
+                        title: "Blank Project 1",
                         category: "Power Systems",
-                        tags: ["MATLAB", "Simulink", "Optimization"],
-                        short: "Campus-scale microgrid model with renewable integration and load balancing logic.",
-                        long: "Developed a simulation framework to assess load balancing, renewable intermittency, and fault-tolerant operating modes for a microgrid architecture.",
-                        github: "https://github.com/",
-                        video: "https://www.youtube.com/",
+                        tags: ["Blank", "Placeholder", "TBD"],
+                        short: "Blank placeholder description.",
+                        long: "Blank placeholder details. Update with final project information.",
+                        github: "#",
+                        video: "#",
                         slides: [
                             {
-                                label: "System Architecture",
-                                bg: "linear-gradient(135deg,#253b8f,#3f6cff)",
+                                label: "Blank Slide 1",
+                                bg: "linear-gradient(135deg,#334155,#1e293b)",
                             },
                             {
-                                label: "Load Profile Results",
-                                bg: "linear-gradient(135deg,#0f766e,#22c55e)",
-                            },
-                            {
-                                label: "Fault Scenario",
-                                bg: "linear-gradient(135deg,#6d28d9,#2563eb)",
+                                label: "Blank Slide 2",
+                                bg: "linear-gradient(135deg,#1f2937,#111827)",
                             },
                         ],
                     },
                     {
-                        id: "converter",
-                        title: "High-Efficiency DC-DC Converter",
+                        id: "project-2",
+                        title: "Blank Project 2",
                         category: "Embedded",
-                        tags: ["Power Electronics", "PCB", "LTspice"],
-                        short: "Buck converter prototype with closed-loop voltage control and thermal optimization.",
-                        long: "Designed, simulated, and validated a DC-DC converter prototype. Implemented compensation tuning and measured efficiency under variable load conditions.",
-                        github: "https://github.com/",
-                        video: "https://www.youtube.com/",
+                        tags: ["Blank", "Placeholder", "TBD"],
+                        short: "Blank placeholder description.",
+                        long: "Blank placeholder details. Update with final project information.",
+                        github: "#",
+                        video: "#",
                         slides: [
                             {
-                                label: "Schematic",
-                                bg: "linear-gradient(135deg,#7c2d12,#ea580c)",
+                                label: "Blank Slide 1",
+                                bg: "linear-gradient(135deg,#334155,#1e293b)",
                             },
                             {
-                                label: "PCB Layout",
-                                bg: "linear-gradient(135deg,#155e75,#0891b2)",
-                            },
-                            {
-                                label: "Bench Testing",
-                                bg: "linear-gradient(135deg,#334155,#0f172a)",
+                                label: "Blank Slide 2",
+                                bg: "linear-gradient(135deg,#1f2937,#111827)",
                             },
                         ],
                     },
                     {
-                        id: "motor-control",
-                        title: "BLDC Motor Closed-Loop Control",
+                        id: "project-3",
+                        title: "Blank Project 3",
                         category: "Control",
-                        tags: ["Embedded C", "ARM MCU", "PID"],
-                        short: "Real-time speed control for BLDC motor with telemetry and tuning interface.",
-                        long: "Implemented closed-loop motor speed control on ARM MCU. Added serial telemetry for live tuning and performance monitoring under dynamic disturbances.",
-                        github: "https://github.com/",
-                        video: "https://www.youtube.com/",
+                        tags: ["Blank", "Placeholder", "TBD"],
+                        short: "Blank placeholder description.",
+                        long: "Blank placeholder details. Update with final project information.",
+                        github: "#",
+                        video: "#",
                         slides: [
                             {
-                                label: "Control Loop",
-                                bg: "linear-gradient(135deg,#0f172a,#1d4ed8)",
+                                label: "Blank Slide 1",
+                                bg: "linear-gradient(135deg,#334155,#1e293b)",
                             },
                             {
-                                label: "Telemetry Dashboard",
-                                bg: "linear-gradient(135deg,#1f2937,#4b5563)",
-                            },
-                            {
-                                label: "Step Response",
-                                bg: "linear-gradient(135deg,#1d4ed8,#06b6d4)",
+                                label: "Blank Slide 2",
+                                bg: "linear-gradient(135deg,#1f2937,#111827)",
                             },
                         ],
                     },
                     {
-                        id: "state-estimation",
-                        title: "Grid State Estimation Tool",
+                        id: "project-4",
+                        title: "Blank Project 4",
                         category: "Power Systems",
-                        tags: ["Python", "Estimation", "Data"],
-                        short: "WLS-based state estimation pipeline for medium-voltage network snapshots.",
-                        long: "Built a Python-based weighted least squares state estimator to evaluate bus voltages and power flows from noisy sensor inputs.",
-                        github: "https://github.com/",
-                        video: "https://www.youtube.com/",
+                        tags: ["Blank", "Placeholder", "TBD"],
+                        short: "Blank placeholder description.",
+                        long: "Blank placeholder details. Update with final project information.",
+                        github: "#",
+                        video: "#",
                         slides: [
                             {
-                                label: "Data Pipeline",
-                                bg: "linear-gradient(135deg,#0f766e,#0369a1)",
+                                label: "Blank Slide 1",
+                                bg: "linear-gradient(135deg,#334155,#1e293b)",
                             },
                             {
-                                label: "Residual Analysis",
-                                bg: "linear-gradient(135deg,#7c3aed,#4f46e5)",
+                                label: "Blank Slide 2",
+                                bg: "linear-gradient(135deg,#1f2937,#111827)",
                             },
                         ],
                     },
                     {
-                        id: "mppt",
-                        title: "PV MPPT Controller Prototype",
+                        id: "project-5",
+                        title: "Blank Project 5",
                         category: "Control",
-                        tags: ["MPPT", "Embedded", "Energy"],
-                        short: "Implemented perturb-and-observe MPPT algorithm for photovoltaic test bench.",
-                        long: "Developed an MPPT control routine to maximize power extraction under irradiance variation and partial shading scenarios.",
-                        github: "https://github.com/",
-                        video: "https://www.youtube.com/",
+                        tags: ["Blank", "Placeholder", "TBD"],
+                        short: "Blank placeholder description.",
+                        long: "Blank placeholder details. Update with final project information.",
+                        github: "#",
+                        video: "#",
                         slides: [
                             {
-                                label: "PV Curves",
-                                bg: "linear-gradient(135deg,#475569,#0ea5e9)",
+                                label: "Blank Slide 1",
+                                bg: "linear-gradient(135deg,#334155,#1e293b)",
                             },
                             {
-                                label: "Controller Logic",
-                                bg: "linear-gradient(135deg,#16a34a,#0f766e)",
+                                label: "Blank Slide 2",
+                                bg: "linear-gradient(135deg,#1f2937,#111827)",
                             },
                         ],
                     },
                     {
-                        id: "sensor-node",
-                        title: "Low-Power Sensor Node",
+                        id: "project-6",
+                        title: "Blank Project 6",
                         category: "Embedded",
-                        tags: ["IoT", "Low Power", "Firmware"],
-                        short: "Battery-powered sensing node with energy-aware duty cycling.",
-                        long: "Designed firmware for low-power operation, periodic transmission, and sensor event capture with sleep-state optimization.",
-                        github: "https://github.com/",
-                        video: "https://www.youtube.com/",
+                        tags: ["Blank", "Placeholder", "TBD"],
+                        short: "Blank placeholder description.",
+                        long: "Blank placeholder details. Update with final project information.",
+                        github: "#",
+                        video: "#",
                         slides: [
                             {
-                                label: "Hardware Block",
-                                bg: "linear-gradient(135deg,#7f1d1d,#dc2626)",
+                                label: "Blank Slide 1",
+                                bg: "linear-gradient(135deg,#334155,#1e293b)",
                             },
                             {
-                                label: "Power Budget",
-                                bg: "linear-gradient(135deg,#166534,#84cc16)",
+                                label: "Blank Slide 2",
+                                bg: "linear-gradient(135deg,#1f2937,#111827)",
                             },
                         ],
                     },
                 ];
 
-                /* =========================
-                 * ELEMENTS
-                 * ========================= */
                 const $ = (s, p = document) => p.querySelector(s);
                 const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 
@@ -1423,6 +1499,9 @@
                 const siteHeader = $("#siteHeader");
                 const hamburgerBtn = $("#hamburgerBtn");
                 const mobileMenu = $("#mobileMenu");
+
+                const extraToggle = $("#extraToggle");
+                const extraDropdown = $("#extraDropdown");
 
                 const projectSearch = $("#projectSearch");
                 const filterGroup = $("#filterGroup");
@@ -1456,9 +1535,6 @@
                 const statStacks = $("#statStacks");
                 const statRepos = $("#statRepos");
 
-                /* =========================
-                 * UTILITIES
-                 * ========================= */
                 const storage = {
                     get(key, fallback = null) {
                         try {
@@ -1483,9 +1559,6 @@
                     };
                 };
 
-                /* =========================
-                 * THEME TOGGLE + PREFERENCE
-                 * ========================= */
                 function initTheme() {
                     const saved = storage.get("theme", null);
                     if (saved) {
@@ -1518,9 +1591,6 @@
                             : "☀️";
                 }
 
-                /* =========================
-                 * NAVBAR SCROLL STYLE + MOBILE MENU
-                 * ========================= */
                 function initNavbar() {
                     const onScroll = () => {
                         siteHeader.classList.toggle(
@@ -1549,11 +1619,42 @@
                             hamburgerBtn.setAttribute("aria-expanded", "false");
                         });
                     });
+
+                    if (extraToggle && extraDropdown) {
+                        extraToggle.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            const open = extraDropdown.classList.toggle("open");
+                            extraToggle.setAttribute(
+                                "aria-expanded",
+                                String(open),
+                            );
+                        });
+
+                        document.addEventListener("click", (e) => {
+                            if (
+                                !extraDropdown.contains(e.target) &&
+                                e.target !== extraToggle
+                            ) {
+                                extraDropdown.classList.remove("open");
+                                extraToggle.setAttribute(
+                                    "aria-expanded",
+                                    "false",
+                                );
+                            }
+                        });
+
+                        document.addEventListener("keydown", (e) => {
+                            if (e.key === "Escape") {
+                                extraDropdown.classList.remove("open");
+                                extraToggle.setAttribute(
+                                    "aria-expanded",
+                                    "false",
+                                );
+                            }
+                        });
+                    }
                 }
 
-                /* =========================
-                 * REVEAL ON SCROLL
-                 * ========================= */
                 function initReveal() {
                     const revealEls = $$(".reveal");
                     const observer = new IntersectionObserver(
@@ -1570,9 +1671,6 @@
                     revealEls.forEach((el) => observer.observe(el));
                 }
 
-                /* =========================
-                 * PROJECTS: RENDER + FILTER + SEARCH + LAZY
-                 * ========================= */
                 let currentFilter = "all";
                 let currentSearch = "";
 
@@ -1620,7 +1718,6 @@
                     initProjectCardLazyVisuals();
                 }
 
-                // Lazy visual enhancement (simulates deferred work)
                 function initProjectCardLazyVisuals() {
                     const cards = $$(".project-card");
                     const obs = new IntersectionObserver(
@@ -1665,17 +1762,12 @@
                     });
                 }
 
-                /* =========================
-                 * MODAL + CAROUSEL
-                 * ========================= */
-                let activeProject = null;
                 let slideIndex = 0;
                 let slideTimer = null;
 
                 function openProjectModal(id) {
                     const p = projectData.find((x) => x.id === id);
                     if (!p) return;
-                    activeProject = p;
                     slideIndex = 0;
 
                     modalTitle.textContent = p.title;
@@ -1784,20 +1876,10 @@
                     });
                 }
 
-                /* =========================
-                 * TIMELINE INTERACTIVE
-                 * ========================= */
                 function initTimeline() {
-                    $$(".timeline-item").forEach((item) => {
-                        item.addEventListener("click", () => {
-                            item.classList.toggle("open");
-                        });
-                    });
+                    // Hover-based timeline: no click handlers needed
                 }
 
-                /* =========================
-                 * CONTACT FORM (VALIDATION + SUBMIT + HONEYPOT)
-                 * ========================= */
                 const validators = {
                     name: (v) =>
                         v.trim().length >= 2 || "Please enter your full name.",
@@ -1863,7 +1945,6 @@
                         e.preventDefault();
                         showFormStatus("", "");
 
-                        // Honeypot anti-spam
                         const honeypot = $("#company").value.trim();
                         if (honeypot) {
                             showFormStatus(
@@ -1892,7 +1973,6 @@
                             return;
                         }
 
-                        // Basic client-side rate limit
                         const now = Date.now();
                         const lastSubmit = storage.get("last_submit_ts", 0);
                         const diff = now - Number(lastSubmit || 0);
@@ -1937,7 +2017,7 @@
                                 "success",
                                 "Message sent successfully. I’ll get back to you soon.",
                             );
-                        } catch (err) {
+                        } catch {
                             showFormStatus(
                                 "error",
                                 "Submission failed. Configure Formspree endpoint or try again later.",
@@ -1949,9 +2029,6 @@
                     });
                 }
 
-                /* =========================
-                 * CV DOWNLOAD TRACKING
-                 * ========================= */
                 function initCvTracking() {
                     const count = Number(storage.get("cv_download_count", 0));
                     cvDownloadCount.textContent = String(count);
@@ -1964,9 +2041,6 @@
                     });
                 }
 
-                /* =========================
-                 * GITHUB API
-                 * ========================= */
                 async function loadGithubRepos() {
                     repoError.style.display = "none";
                     repoList.innerHTML = "";
@@ -2015,9 +2089,6 @@
                     }
                 }
 
-                /* =========================
-                 * DYNAMIC STATS
-                 * ========================= */
                 function initStats() {
                     const currentYear = new Date().getFullYear();
                     const years = Math.max(1, currentYear - START_YEAR + 1);
@@ -2029,9 +2100,6 @@
                     statStacks.textContent = String(stacks);
                 }
 
-                /* =========================
-                 * PERFORMANCE: prefetch likely links
-                 * ========================= */
                 function initPrefetch() {
                     const likelyLinks = [
                         "https://github.com/",
@@ -2046,12 +2114,7 @@
                     });
                 }
 
-                /* =========================
-                 * PWA single-file workaround:
-                 * dynamic manifest + dynamic service worker
-                 * ========================= */
                 async function initPWA() {
-                    // Dynamic manifest as Blob URL
                     const manifest = {
                         name: "EE Graduate Portfolio",
                         short_name: "EE Portfolio",
@@ -2076,7 +2139,6 @@
                     manifestLink.href = manifestURL;
                     document.head.appendChild(manifestLink);
 
-                    // Dynamic service worker
                     if ("serviceWorker" in navigator) {
                         const swCode = `
             const CACHE = "portfolio-cache-v1";
@@ -2113,25 +2175,17 @@
                     }
                 }
 
-                /* =========================
-                 * INIT
-                 * ========================= */
                 function initYear() {
                     yearEl.textContent = String(new Date().getFullYear());
                 }
 
                 function initImageLazyAttribute() {
-                    // For any real <img> tags you later add:
                     $$("img").forEach((img) => {
                         if (!img.hasAttribute("loading"))
                             img.setAttribute("loading", "lazy");
                         if (!img.hasAttribute("decoding"))
                             img.setAttribute("decoding", "async");
                     });
-                }
-
-                function initModalOpenDelegation() {
-                    // already in projectsGrid listener
                 }
 
                 async function init() {
